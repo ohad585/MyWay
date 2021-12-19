@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/blankFragment"
         android:name="com.example.myway.BlankFragment"
-        android:label="Log In"
+        android:label="Home page"
         tools:layout="@layout/fragment_blank" />
 </navigation>
