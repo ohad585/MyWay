@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/reg_logo_img"
+        android:layout_width="259dp"
+        android:layout_height="190dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.035"
+        app:srcCompat="@drawable/logo" />
+
+    <EditText
+        android:id="@+id/reg_email_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:ems="10"
+        android:fontFamily="@font/anton"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/reg_email_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/reg_email_tv"
+        app:layout_constraintTop_toTopOf="@+id/reg_email_tv"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/reg_phone_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:ems="10"
+        android:fontFamily="@font/anton"
+        android:inputType="phone"
+        android:minHeight="48dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/reg_phone_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/reg_phone_tv"
+        app:layout_constraintTop_toTopOf="@+id/reg_phone_tv"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/reg_username_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:ems="10"
+        android:fontFamily="@font/anton"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/reg__name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/reg__name_tv"
+        app:layout_constraintTop_toTopOf="@+id/reg__name_tv"
+        app:layout_constraintVertical_bias="0.095"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/reg__name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/anton"
+        android:text="Username :"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_logo_img" />
+
+    <Button
+        android:id="@+id/reg_cncl_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#D51B2FA3"
+        android:fontFamily="@font/anton"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:textColorHint="#F1EDED"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/reg_reg_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/reg_reg_btn"
+        app:layout_constraintTop_toTopOf="@+id/reg_reg_btn"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/reg_reg_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:backgroundTint="#D51B2FA3"
+        android:fontFamily="@font/anton"
+        android:text="Register"
+        android:textColor="@color/white"
+        android:textColorHint="#F4F4F4"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/reg_cncl_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_email_tv" />
+
+    <TextView
+        android:id="@+id/reg_phone_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/anton"
+        android:text="Phone :"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/reg_pass_tv"
+        app:layout_constraintTop_toBottomOf="@+id/reg_pass_tv" />
+
+    <EditText
+        android:id="@+id/reg_pass_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:ems="10"
+        android:fontFamily="@font/anton"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/reg_pass_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/reg_pass_tv"
+        app:layout_constraintTop_toTopOf="@+id/reg_pass_tv"
+        app:layout_constraintVertical_bias="0.476"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/reg_pass_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/anton"
+        android:text="Password :"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/reg__name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/reg__name_tv" />
+
+    <TextView
+        android:id="@+id/reg_email_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/anton"
+        android:text="Email :"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/reg_phone_tv"
+        app:layout_constraintTop_toBottomOf="@+id/reg_phone_tv" />
+</androidx.constraintlayout.widget.ConstraintLayout>
