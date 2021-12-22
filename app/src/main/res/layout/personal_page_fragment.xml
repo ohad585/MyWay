@@ -5,26 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/anton"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView10" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/anton"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintStart_toStartOf="@+id/textView8" />
-
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/profile_logo"
         android:layout_width="259dp"
         android:layout_height="190dp"
         android:layout_marginTop="16dp"
@@ -34,20 +16,7 @@
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/anton"
-        android:text="Mail address"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/profile_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -57,10 +26,10 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_logo" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/profile_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -68,13 +37,26 @@
         android:fontFamily="@font/anton"
         android:text="User name"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView11"
+        app:layout_constraintEnd_toStartOf="@+id/profile_title"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_title" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/profile_mail_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/anton"
+        android:text="Mail address"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/profile_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
+
+    <TextView
+        android:id="@+id/profile_phone_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -83,11 +65,41 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="@+id/profile_mail_tv"
+        app:layout_constraintTop_toBottomOf="@+id/profile_mail_tv" />
+
+    <TextView
+        android:id="@+id/profile_name_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/anton"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_name_tv"
+        app:layout_constraintTop_toTopOf="@+id/profile_name_tv" />
+
+    <TextView
+        android:id="@+id/profile_mail_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/anton"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_mail_tv"
+        app:layout_constraintStart_toStartOf="@+id/profile_name_info" />
+
+    <TextView
+        android:id="@+id/profile_phone_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/anton"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_phone_tv"
+        app:layout_constraintStart_toStartOf="@+id/profile_mail_info" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/profile_editPss_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
@@ -96,12 +108,12 @@
         android:text="edit password"
         android:textColor="@color/white"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView2"
-        app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintEnd_toEndOf="@+id/profile_logo"
+        app:layout_constraintStart_toStartOf="@+id/profile_logo"
+        app:layout_constraintTop_toBottomOf="@+id/profile_phone_tv" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/profile_editDetails_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#D51B2FA3"
@@ -110,22 +122,10 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/button5"
+        app:layout_constraintEnd_toEndOf="@+id/profile_editPss_btn"
         app:layout_constraintHorizontal_bias="0.588"
-        app:layout_constraintStart_toStartOf="@+id/button5"
-        app:layout_constraintTop_toBottomOf="@+id/button5"
+        app:layout_constraintStart_toStartOf="@+id/profile_editPss_btn"
+        app:layout_constraintTop_toBottomOf="@+id/profile_editPss_btn"
         app:layout_constraintVertical_bias="0.152" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:fontFamily="@font/anton"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

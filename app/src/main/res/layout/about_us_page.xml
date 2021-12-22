@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/about_us_logo"
+        android:layout_width="259dp"
+        android:layout_height="190dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/about_us_text"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/anton"
+        android:text="MY WAY provides the user in general and the blind in particular with a navigation route from their current location to the destination. \nThe entire navigation will be done using voice instructions which will facilitate the journey on the way to the destination.  \n\nIn addition, it provides information about the objects surrounding the blind in the navigation stages and even reads aloud the references and actions (such as ordering an elevator, going down the stairs, etc.)\n that he must do on his way to the destination, so the user can know where he is inside the building and the bodies around him.\n In the complicated structure.  \n\nDevelopers: Ohad Shalom and Liron Hamo"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_us_title"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/about_us_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/anton"
+        android:text="ABOUT US"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/about_us_logo"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/about_us_logo"
+        app:layout_constraintTop_toBottomOf="@+id/about_us_logo" />
+</androidx.constraintlayout.widget.ConstraintLayout>
