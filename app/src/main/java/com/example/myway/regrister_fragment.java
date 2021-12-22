@@ -1,10 +1,13 @@
 package com.example.myway;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,15 +44,60 @@ public class regrister_fragment extends Fragment {
                 save();
             }
         });
+        cncl_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigateUp();
+            }
+        });
+
+
+
         return view;
     }
 
 
 
     public void save() {
-        User user = new User(name_et.getText().toString(), pass_et.getText().toString(), phone_et.getText().toString(), mail_et.getText().toString());
-        Model.instance.addUser(user, () -> {
-            Navigation.findNavController(view).navigateUp();
-        });
+        String name=name_et.getText().toString();
+        String phone=phone_et.getText().toString();
+        String pass=pass_et.getText().toString();
+        String mail=mail_et.getText().toString();
+
+        if (name.matches("")|| phone.matches("") || pass.matches("")|| mail.matches("") ){
+            AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
+            alertDialog.setTitle("ERROR");
+            alertDialog.setMessage("All fields must be filled");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+        else {
+            User user = new User(name, pass, phone, mail);
+
+            Model.instance.addUser(user, (boolean flag) -> {
+                Log.d("TAG", Boolean.toString(flag));
+                if (flag==true){
+                    Navigation.findNavController(view).navigateUp();
+                }
+                if(flag==false){
+                    AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
+                    alertDialog.setTitle("ERROR");
+                    alertDialog.setMessage("User name already exist");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+
+                }
+            });
+        }
     }
 }

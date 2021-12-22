@@ -17,7 +17,6 @@ public class log_in_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.log_in_fragment, container, false);
-
         return view;
 
     }
