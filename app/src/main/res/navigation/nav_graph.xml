@@ -3,11 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/blankFragment">
-
+    app:startDestination="@id/home_page_fragment">
     <fragment
-        android:id="@+id/blankFragment"
-        android:name="com.example.myway.BlankFragment"
-        android:label="About Us"
-        tools:layout="@layout/fragment_blank" />
+        android:id="@+id/home_page_fragment"
+        android:name="com.example.myway.home_page_fragment"
+        android:label="Home Page"
+        tools:layout="@layout/home_page_fragment" >
+        <action
+            android:id="@+id/action_home_page_fragment_to_regrister_fragment"
+            app:destination="@id/regrister_fragment" />
+        <action
+            android:id="@+id/action_home_page_fragment_to_log_in_fragment"
+            app:destination="@id/log_in_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/regrister_fragment"
+        android:name="com.example.myway.regrister_fragment"
+        android:label="Registration"
+        tools:layout="@layout/registraition_fragment" >
+        <action
+            android:id="@+id/action_regrister_fragment_to_home_page_fragment"
+            app:destination="@id/home_page_fragment"
+            app:popUpTo="@id/home_page_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/log_in_fragment"
+        android:name="com.example.myway.log_in_fragment"
+        android:label="LOG IN"
+        tools:layout="@layout/log_in_fragment" >
+        <action
+            android:id="@+id/action_log_in_fragment_to_home_page_fragment"
+            app:destination="@id/home_page_fragment"
+            app:popUpTo="@id/home_page_fragment" />
+    </fragment>
 </navigation>
