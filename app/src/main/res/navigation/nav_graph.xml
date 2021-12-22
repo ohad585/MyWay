@@ -36,4 +36,9 @@
             app:destination="@id/home_page_fragment"
             app:popUpTo="@id/home_page_fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/personal_page_fragment"
+        android:name="com.example.myway.personal_page_fragment"
+        android:label="fragment_personal_page_fragment"
+        tools:layout="@layout/personal_page_fragment" /><action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/>
 </navigation>
