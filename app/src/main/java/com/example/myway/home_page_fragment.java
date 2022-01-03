@@ -24,6 +24,7 @@ public class home_page_fragment extends Fragment {
         Button login_btn=view.findViewById(R.id.home_log_in_btn);
         Button reg_btn=view.findViewById(R.id.home_register_btn);
         login_btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_page_fragment_to_log_in_fragment));
+
         reg_btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_page_fragment_to_regrister_fragment));
         return view;
     }
