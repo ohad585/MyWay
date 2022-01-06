@@ -15,9 +15,6 @@
         <action
             android:id="@+id/action_home_page_fragment_to_log_in_fragment"
             app:destination="@id/log_in_fragment" />
-        <action
-            android:id="@+id/action_home_page_fragment_to_firebaseUIActivity"
-            app:destination="@id/firebaseUIActivity" />
     </fragment>
     <fragment
         android:id="@+id/regrister_fragment"
@@ -44,8 +41,4 @@
         android:name="com.example.myway.personal_page_fragment"
         android:label="fragment_personal_page_fragment"
         tools:layout="@layout/personal_page_fragment" /><action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/>
-    <activity
-        android:id="@+id/firebaseUIActivity"
-        android:name="com.example.myway.FirebaseUIActivity"
-        android:label="FirebaseUIActivity" />
 </navigation>
