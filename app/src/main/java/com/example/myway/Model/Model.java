@@ -12,6 +12,8 @@ public class Model {
     ModelFirebase modelFirebase = new ModelFirebase();
     private Model(){}
 
+
+
     public interface AddUserListener{
         void onComplete(boolean flag);
     }
@@ -34,7 +36,23 @@ public class Model {
         void onComplete(User u);
     }
 
+
     public void getUserByUserName(String userName,GetUserByUserNameListener listener) {
         modelFirebase.getUserByUserName(userName, listener);
+    }
+    public interface checkLogInListener{
+          void onComplete(User u);
+      }
+//    public void checkUser(String name, String pass,checkLogInListener listener) {
+//        modelFirebase.checkUser(name,pass,listener);
+//
+//    }
+
+    public interface RegistrationByMailPassListener{
+        void onComplete();
+    }
+
+    public void regModel(String email,String pass,RegistrationByMailPassListener listener){
+        modelFirebase.reg(email, pass, listener);
     }
 }

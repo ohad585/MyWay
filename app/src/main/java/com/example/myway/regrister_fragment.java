@@ -82,7 +82,7 @@ public class regrister_fragment extends Fragment {
             Model.instance.addUser(user, (boolean flag) -> {
                 Log.d("TAG", Boolean.toString(flag));
                 if (flag==true){
-                    Navigation.findNavController(view).navigateUp();
+                    Model.instance.regModel(mail, pass, () ->  Navigation.findNavController(view).navigateUp());
                 }
                 if(flag==false){
                     AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
@@ -100,4 +100,6 @@ public class regrister_fragment extends Fragment {
             });
         }
     }
+
+
 }

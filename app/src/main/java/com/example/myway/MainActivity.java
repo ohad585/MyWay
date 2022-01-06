@@ -3,10 +3,12 @@ package com.example.myway;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case android.R.id.home:
                     navCtrl.navigateUp();
+                    return true;
+                case R.id.profile:
+                   navCtrl.navigate(R.id.action_global_personal_page_fragment);
                     return true;
             }
         }
