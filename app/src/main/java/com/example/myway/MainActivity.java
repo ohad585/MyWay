@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this,navCtrl);
 
 
+
     }
 
     @Override
