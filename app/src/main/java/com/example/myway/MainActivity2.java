@@ -57,7 +57,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         Polygon room161 = googleMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(31.80728, 34.65785),//Top left
-                        new LatLng(31.80725, 34.6579),//Top right
+                        new LatLng(31.80726, 34.6579),//Top right
                         new LatLng(31.80722, 34.65787),//Botom right
                         new LatLng(31.80724, 34.65782))//Bottom left
                 .strokeColor(Color.BLACK)
@@ -73,7 +73,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         Polygon room162 = googleMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(31.80721, 34.65787),//Top left
-                        new LatLng(31.80719, 34.65793),//Top right
+                        new LatLng(31.80719, 34.65792),//Top right
                         new LatLng(31.80714, 34.65789),//Botom right
                         new LatLng(31.80717, 34.65784))//Bottom left
                 .strokeColor(Color.BLACK)
@@ -105,14 +105,14 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 .add(new LatLng(31.80715, 34.6581),//Top left
                         new LatLng(31.80712, 34.65816),//Top right
                         new LatLng(31.80709, 34.65814),//Botom right
-                        new LatLng(31.80712, 34.65807))//Bottom left
+                        new LatLng(31.80712, 34.65808))//Bottom left
                 .strokeColor(Color.BLACK)
                 .fillColor(0x7F00FF00)
                 .clickable(true));
         room165.setTag("Room 165");
 
         Polygon room166B= googleMap.addPolygon(new PolygonOptions()
-                .add(new LatLng(31.80706, 34.65817),//Top left
+                .add(new LatLng(31.80705, 34.65816),//Top left
                         new LatLng(31.80702, 34.65822),//Top right
                         new LatLng(31.80699, 34.65819),//Botom right
                         new LatLng(31.80702, 34.65814))//Bottom left
