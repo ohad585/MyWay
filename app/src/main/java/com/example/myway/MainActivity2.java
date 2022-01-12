@@ -123,7 +123,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         Polygon room166C= googleMap.addPolygon(new PolygonOptions()
                 .add(new LatLng(31.80701, 34.65825),//Top left
-                        new LatLng(31.80698, 34.6583),//Top right
+                        new LatLng(31.80698, 34.65829),//Top right
                         new LatLng(31.80695, 34.65828),//Botom right
                         new LatLng(31.80697, 34.65823))//Bottom left
                 .strokeColor(Color.BLACK)
