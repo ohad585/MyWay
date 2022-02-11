@@ -1,5 +1,7 @@
 package com.example.myway.Model;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ public class User {
     private String password;
     private String phoneNum;
     private String email;
+    private String uid;
 
     public User() {}
 
@@ -16,6 +19,15 @@ public class User {
         password=p;
         phoneNum=phone;
         email=e;
+        uid="";
+    }
+
+    public User(FirebaseUser user) {
+        this.email=user.getEmail();
+        this.password="Classified";
+        this.phoneNum=user.getPhoneNumber();;
+        this.uid=user.getUid();
+
     }
 
     public String getEmail() {
@@ -34,6 +46,8 @@ public class User {
         return userName;
     }
 
+    public String getUid() { return uid; }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -49,6 +63,8 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public void setUid(String uid) { this.uid = uid; }
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();

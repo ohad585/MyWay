@@ -1,11 +1,6 @@
 package com.example.myway.Model;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-
-import com.example.myway.MainActivity;
-
-import java.util.List;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Model {
     public static final Model instance = new Model();
@@ -53,6 +48,12 @@ public class Model {
     }
 
     public void regModel(String email,String pass,RegistrationByMailPassListener listener){
-        modelFirebase.reg(email, pass, listener);
+        modelFirebase.regWithEmail(email, pass, listener);
+    }
+    public interface SignInWithEmailPassListener{
+        void onComplete(User user, boolean success);
+    }
+    public void signInWithEmailPass(String email,String password,SignInWithEmailPassListener listener){
+        modelFirebase.signInWithEmail(email,password,listener);
     }
 }
