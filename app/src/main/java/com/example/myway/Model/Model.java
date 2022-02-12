@@ -1,12 +1,40 @@
 package com.example.myway.Model;
 
-import com.google.firebase.auth.FirebaseUser;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.myway.MyApplication;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Model {
     public static final Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
-    private Model(){}
+    MutableLiveData<List<Room>> roomsListLd = new MutableLiveData<List<Room>>();
 
+    private Model(){reloadRoomList();}
+
+    void reloadRoomList(){
+        modelFirebase.getAllRooms((list)->{
+            MyApplication.executorService.execute(()->{
+                //3. update local last update date
+                //4. add new records to the local db
+                Log.d("TAG", "FB returned " + list.size());
+                List<Room> rList=new LinkedList<>();
+                for(Room r : list){
+                    rList.add(r);
+                }
+                //5. return all records to the caller
+                roomsListLd.postValue(rList);
+            });
+        });
+    }
+    public LiveData<List<Room>> getAll(){
+        return roomsListLd;
+    }
 
 
     public interface AddUserListener{
@@ -55,5 +83,18 @@ public class Model {
     }
     public void signInWithEmailPass(String email,String password,SignInWithEmailPassListener listener){
         modelFirebase.signInWithEmail(email,password,listener);
+    }
+    public interface SaveRoomListener {
+        void onComplete();
+    }
+    public void saveRoom(Room r, SaveRoomListener listener){
+        modelFirebase.saveRoom(r,listener);
+    }
+
+    public interface GetAllRoomsListener{
+        void onComplete(List<Room> roomList);
+    }
+    public void getAllRooms(GetAllRoomsListener listener){
+        modelFirebase.getAllRooms(listener);
     }
 }

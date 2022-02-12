@@ -1,23 +1,22 @@
 package com.example.myway.Model;
-import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.LinkedList;
 
 
 public class ModelFirebase {
@@ -117,5 +116,42 @@ public class ModelFirebase {
         }
 
 
+    public void saveRoom(Room r, Model.SaveRoomListener listener) {
+        db.collection("Rooms")
+                .add(r.toJson())
+                .addOnSuccessListener((successListener)-> {
+                    listener.onComplete();
+                })
+                .addOnFailureListener((e)-> {
+                    Log.d("TAG", e.getMessage());
+                });
+    }
+
+    public void getAllRooms(Model.GetAllRoomsListener listener) {
+        db.collection("Rooms")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<Room> roomList = new LinkedList<Room>();
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc: task.getResult()){
+                        Room s = Room.fromJson(doc.getData());
+                        Log.d("TAG", "onComplete: "+s.getDetails());
+                        if (s != null) {
+                            roomList.add(s);
+                        }
+                    }
+                }else{
+
+                }
+                listener.onComplete(roomList);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
 
     }
+}
