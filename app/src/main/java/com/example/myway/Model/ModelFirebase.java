@@ -23,6 +23,8 @@ public class ModelFirebase {
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
     public void addUser(User user, Model.AddUserListener listener) {
         db.collection("users")
                 .document(user.getUserName()).set(user.toJson())

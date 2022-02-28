@@ -18,6 +18,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
 
@@ -25,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
+    GoogleMap googleMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +38,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap1) {
+        googleMap=googleMap1;
         List<Polygon> polygonList=new LinkedList<>();
         // Set the map coordinates to Sami shamoon ashdod.
         LatLng samiShamoon = new LatLng(31.80687, 34.65846);
@@ -44,7 +48,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         // Add a marker on the map coordinates.
         googleMap.addMarker(new MarkerOptions()
                 .position(samiShamoon)
-                .title("Sami"));
+                .title("Sami")
+                .snippet(getStringOfDetails()));
         // Move the camera to the map coordinates and zoom in closer.
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(samiShamoon));
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(19));
@@ -59,19 +64,30 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
-
+        drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
         // Display traffic.
         googleMap.setTrafficEnabled(true);
         googleMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             public void onPolygonClick(Polygon polygon) {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target, googleMap.getCameraPosition().zoom));
                 Log.d("TAG", "onPolygonClick: Clicked");
-
-
             }
         });
     }
 
+    private String getStringOfDetails() {
+        String str="Liron";
+        return str;
+    }
+
+    private void drowPolylineBetween2Points(double pointAX,double pointAY,double pointBX,double pointBY) {
+        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(pointAX,pointAY),
+                        new LatLng(pointBX,pointBY)));
+
+    }
 
 
 }
