@@ -1,8 +1,10 @@
 package com.example.myway;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -39,6 +42,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap1) {
+        GoogleMap.OnPolygonClickListener listener = null;
         googleMap=googleMap1;
         List<Polygon> polygonList=new LinkedList<>();
         // Set the map coordinates to Sami shamoon ashdod.
@@ -48,8 +52,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         // Add a marker on the map coordinates.
         googleMap.addMarker(new MarkerOptions()
                 .position(samiShamoon)
-                .title("Sami")
-                .snippet(getStringOfDetails()));
+                .title("Sami"));
         // Move the camera to the map coordinates and zoom in closer.
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(samiShamoon));
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(19));
@@ -57,28 +60,39 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onComplete(List<Room> roomList) {
                 for(Room r:roomList){
-                    Log.d("TAG112", "onMapReady: "+r.getDetails());
+                    //Log.d("TAG112", "onMapReady: "+r.getDetails());
                     Polygon p = googleMap.addPolygon(r.retPolygonOptions());
+                    p.setClickable(true);
                     p.setTag(r.getDetails());
+//                    Marker marker = googleMap.addMarker(
+//                            new MarkerOptions()
+//                                    .position((LatLng) p.getPoints().get(0))
+//                                    .title(r.getDetails()));
                     polygonList.add(p);
                 }
             }
         });
+
         drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
         // Display traffic.
         googleMap.setTrafficEnabled(true);
         googleMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             public void onPolygonClick(Polygon polygon) {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target, googleMap.getCameraPosition().zoom));
-                Log.d("TAG", "onPolygonClick: Clicked");
+                Model.instance.GetRoomDetails(polygon, new Model.GetRoomDetailsListener() {
+                    @Override
+                    public void onComplete(Room room) {
+                        DialogFragment newFragment = new DialogRoomDetails(room);
+                        newFragment.show(getSupportFragmentManager(), "TAG");
+                    }
+                });
+
             }
         });
+
     }
 
-    private String getStringOfDetails() {
-        String str="Liron";
-        return str;
-    }
+
 
     private void drowPolylineBetween2Points(double pointAX,double pointAY,double pointBX,double pointBY) {
         Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()

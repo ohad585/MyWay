@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myway.MyApplication;
+import com.google.android.gms.maps.model.Polygon;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -97,4 +98,12 @@ public class Model {
     public void getAllRooms(GetAllRoomsListener listener){
         modelFirebase.getAllRooms(listener);
     }
+
+    public interface GetRoomDetailsListener{
+        void onComplete(Room room);
+    }
+    public void GetRoomDetails(Polygon p,GetRoomDetailsListener listener){
+        modelFirebase.GetRoomDetails(p,listener);
+    }
+
 }

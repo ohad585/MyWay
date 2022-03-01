@@ -3,6 +3,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -20,7 +21,7 @@ import java.util.LinkedList;
 
 
 public class ModelFirebase {
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -28,10 +29,10 @@ public class ModelFirebase {
     public void addUser(User user, Model.AddUserListener listener) {
         db.collection("users")
                 .document(user.getUserName()).set(user.toJson())
-                .addOnSuccessListener((successListener)-> {
+                .addOnSuccessListener((successListener) -> {
                     listener.onComplete(true);
                 })
-                .addOnFailureListener((e)-> {
+                .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
                 });
     }
@@ -82,49 +83,50 @@ public class ModelFirebase {
             }
         });
     }
-        public void regWithEmail(String email, String password, Model.RegistrationByMailPassListener listener){
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        listener.onComplete();
-                        Log.d("Tag","success");
-                    } else {
-                        Log.d("Tag","not success",task.getException());
 
-                    }
+    public void regWithEmail(String email, String password, Model.RegistrationByMailPassListener listener) {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    listener.onComplete();
+                    Log.d("Tag", "success");
+                } else {
+                    Log.d("Tag", "not success", task.getException());
+
                 }
-            });
+            }
+        });
 
-        }
+    }
 
-        public void signInWithEmail(String email,String password ,Model.SignInWithEmailPassListener listener ){
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("TAG", "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                listener.onComplete(new User(user),true);
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                listener.onComplete(null,true);
-                            }
+    public void signInWithEmail(String email, String password, Model.SignInWithEmailPassListener listener) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("TAG", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            listener.onComplete(new User(user), true);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("TAG", "signInWithEmail:failure", task.getException());
+                            listener.onComplete(null, true);
                         }
-                    });
-        }
+                    }
+                });
+    }
 
 
     public void saveRoom(Room r, Model.SaveRoomListener listener) {
         db.collection("Rooms")
                 .add(r.toJson())
-                .addOnSuccessListener((successListener)-> {
+                .addOnSuccessListener((successListener) -> {
                     listener.onComplete();
                 })
-                .addOnFailureListener((e)-> {
+                .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
                 });
     }
@@ -135,15 +137,15 @@ public class ModelFirebase {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 LinkedList<Room> roomList = new LinkedList<Room>();
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc: task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         Room s = Room.fromJson(doc.getData());
-                        Log.d("TAG", "onComplete: "+s.getDetails());
+                        Log.d("TAG", "onComplete: " + s.getDetails());
                         if (s != null) {
                             roomList.add(s);
                         }
                     }
-                }else{
+                } else {
 
                 }
                 listener.onComplete(roomList);
@@ -155,5 +157,24 @@ public class ModelFirebase {
             }
         });
 
+    }
+
+    public void GetRoomDetails(Polygon p, Model.GetRoomDetailsListener listener) {
+        db.collection("Rooms").whereEqualTo("DETAILS", p.getTag().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            //if sucess return the pizza
+                            Room r = Room.fromJson(document.getData());
+                            listener.onComplete(r);
+                        } else {
+                            listener.onComplete(null);
+                        }
+                    }
+                }
+            }
+        });
     }
 }
