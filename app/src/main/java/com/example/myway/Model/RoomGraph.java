@@ -1,5 +1,7 @@
 package com.example.myway.Model;
 
+import android.util.Log;
+
 import java.util.List;
 
 public class RoomGraph {
@@ -113,5 +115,6 @@ public class RoomGraph {
         edges.add(new Edge("163","160",""));
         edges.add(new Edge("162","160",""));
         edges.add(new Edge("161","160",""));
+
     }
 }
