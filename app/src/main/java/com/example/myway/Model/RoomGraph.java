@@ -51,10 +51,16 @@ public class RoomGraph {
     private class Edge{
         private String e1;
         private String e2;
+        private String instruction;
 
-        public Edge(String e1,String e2){
+        public Edge(String e1,String e2,String ins){
             this.e1=e1;
             this.e2=e2;
+            this.instruction=ins;
+        }
+
+        public String getInstruction() {
+            return instruction;
         }
 
         public String getE1() {
@@ -63,6 +69,10 @@ public class RoomGraph {
 
         public String getE2() {
             return e2;
+        }
+
+        public void setInstruction(String instruction) {
+            this.instruction = instruction;
         }
 
         public void setE1(String e1) {
@@ -86,5 +96,22 @@ public class RoomGraph {
         roomList.add(new RoomRepresent(34.65791,31.8072,"162"));
         roomList.add(new RoomRepresent(34.65785,31.80721,"161"));
         roomList.add(new RoomRepresent(34.65783,31.80729,"160"));
+
+        edges.add(new Edge("168","167",""));
+        edges.add(new Edge("167","J1",""));
+        edges.add(new Edge("J1","J2",""));
+        edges.add(new Edge("J2","166A",""));
+        edges.add(new Edge("J2","160",""));
+        edges.add(new Edge("166A","166B",""));
+        edges.add(new Edge("166A","166C",""));
+        edges.add(new Edge("166A","165",""));
+        edges.add(new Edge("165","164",""));
+        edges.add(new Edge("165","163",""));
+        edges.add(new Edge("165","162",""));
+        edges.add(new Edge("165","161",""));
+        edges.add(new Edge("164","160",""));
+        edges.add(new Edge("163","160",""));
+        edges.add(new Edge("162","160",""));
+        edges.add(new Edge("161","160",""));
     }
 }
