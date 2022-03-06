@@ -1,5 +1,7 @@
 package com.example.myway.Model;
 
+import android.util.Log;
+
 import java.util.List;
 
 public class RoomGraph {
@@ -86,5 +88,13 @@ public class RoomGraph {
         roomList.add(new RoomRepresent(34.65791,31.8072,"162"));
         roomList.add(new RoomRepresent(34.65785,31.80721,"161"));
         roomList.add(new RoomRepresent(34.65783,31.80729,"160"));
+        
+        for (int i=0;i<roomList.size();i++){
+            for (int j=0;j<roomList.size();j++){
+                edges.add(new Edge(roomList.get(i).getRoom(),roomList.get(j).getRoom()));
+            }
+        }
+        Log.d("TAGLIRON",""+edges);
+
     }
 }
