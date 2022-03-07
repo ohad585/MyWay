@@ -2,6 +2,7 @@ package com.example.myway.Model;
 
 import android.util.Log;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class RoomGraph {
@@ -11,10 +12,13 @@ public class RoomGraph {
     /**
      * Represents the vertex in the graph
      */
-    private class RoomRepresent {
+    public static class RoomRepresent implements Comparable {
         private double doorX;
         private double doorY;
         private String room;
+        public double d_value = Double.POSITIVE_INFINITY;
+        public boolean discovered = false;
+        RoomRepresent parent = null;
 
         public RoomRepresent(double dx,double dy,String r){
             doorX=dx;
@@ -45,20 +49,30 @@ public class RoomGraph {
         public void setRoom(String room) {
             this.room = room;
         }
+
+        @Override
+        public int compareTo(Object o) {
+            if(o instanceof RoomRepresent) {
+                return String.CASE_INSENSITIVE_ORDER.compare(this.room,((RoomRepresent) o).room);
+            }
+            return 0;
+        }
     }
 
     /**
      * Represents edges (e1,e2)
      */
-    private class Edge{
+    public class Edge{
         private String e1;
         private String e2;
         private String instruction;
+        public int weight;
 
         public Edge(String e1,String e2,String ins){
             this.e1=e1;
             this.e2=e2;
             this.instruction=ins;
+            weight=1;
         }
 
         public String getInstruction() {
@@ -87,6 +101,9 @@ public class RoomGraph {
     }
 
     public RoomGraph(){
+        roomList = new LinkedList<>();
+        edges = new LinkedList<>();
+
         roomList.add(new RoomRepresent(34.65844,31.80684,"168"));
         roomList.add(new RoomRepresent(34.65832,31.80689,"167"));
         roomList.add(new RoomRepresent(34.65828,31.807,"166C"));
@@ -98,6 +115,8 @@ public class RoomGraph {
         roomList.add(new RoomRepresent(34.65791,31.8072,"162"));
         roomList.add(new RoomRepresent(34.65785,31.80721,"161"));
         roomList.add(new RoomRepresent(34.65783,31.80729,"160"));
+        roomList.add(new RoomRepresent(34.65828,31.80693,"J1"));
+        roomList.add(new RoomRepresent( 34.65836,31.80704,"J2"));
 
         edges.add(new Edge("168","167",""));
         edges.add(new Edge("167","J1",""));
@@ -116,5 +135,25 @@ public class RoomGraph {
         edges.add(new Edge("162","160",""));
         edges.add(new Edge("161","160",""));
 
+    }
+
+    public List<Edge> getEdges() {
+        return edges;
+    }
+
+    public List<RoomRepresent> getRoomList() {
+        return roomList;
+    }
+
+    public int getRoomListSize(){
+        return roomList.size();
+    }
+
+    public RoomRepresent getRoomByName(String name){
+        for(RoomRepresent r:roomList){
+            if(r.room.matches(name))
+                return r;
+        }
+        return null;
     }
 }
