@@ -73,11 +73,10 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
-<<<<<<< HEAD
+
 
         drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
-=======
->>>>>>> RoomGraph
+
         // Display traffic.
         googleMap.setTrafficEnabled(true);
         googleMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
