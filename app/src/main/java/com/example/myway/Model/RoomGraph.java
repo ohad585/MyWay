@@ -100,6 +100,7 @@ public class RoomGraph {
         roomList.add(new RoomRepresent(34.65783,31.80729,"160"));
 
         edges.add(new Edge("168","167",""));
+<<<<<<< HEAD
         edges.add(new Edge("167","168",""));
 
         edges.add(new Edge("167","J1",""));
@@ -168,6 +169,23 @@ public class RoomGraph {
         edges.add(new Edge("161","160",""));
         edges.add(new Edge("160","161",""));
 
+=======
+        edges.add(new Edge("167","J1",""));
+        edges.add(new Edge("J1","J2",""));
+        edges.add(new Edge("J2","166A",""));
+        edges.add(new Edge("J2","160",""));
+        edges.add(new Edge("166A","166B",""));
+        edges.add(new Edge("166A","166C",""));
+        edges.add(new Edge("166A","165",""));
+        edges.add(new Edge("165","164",""));
+        edges.add(new Edge("165","163",""));
+        edges.add(new Edge("165","162",""));
+        edges.add(new Edge("165","161",""));
+        edges.add(new Edge("164","160",""));
+        edges.add(new Edge("163","160",""));
+        edges.add(new Edge("162","160",""));
+        edges.add(new Edge("161","160",""));
+>>>>>>> cbfdcdc426a908195cc7a5d2048c93dbb7037441
 
     }
 }
