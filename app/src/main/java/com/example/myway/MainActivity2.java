@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.myway.Model.Model;
 import com.example.myway.Model.Room;
+import com.example.myway.Model.RoomGraph;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -72,8 +73,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
-
-        drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
         // Display traffic.
         googleMap.setTrafficEnabled(true);
         googleMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
