@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myway.Model.Model;
+import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
 import com.example.myway.Model.RoomGraph;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,6 +40,9 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        RoomGraph g = new RoomGraph();
+        Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
+
     }
 
     @Override
