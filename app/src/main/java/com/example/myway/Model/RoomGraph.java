@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RoomGraph {
     private List<RoomRepresent> roomList;
-    private List<Edge> edges;
+    private  List<Edge> edges;
 
     /**
      * Represents the vertex in the graph
@@ -66,7 +66,7 @@ public class RoomGraph {
         private String e1;
         private String e2;
         private String instruction;
-        public int weight;
+        public double weight;
 
         public Edge(String e1,String e2,String ins){
             this.e1=e1;
@@ -98,6 +98,12 @@ public class RoomGraph {
         public void setE2(String e2) {
             this.e2 = e2;
         }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public void setWeight(double weight){ this.weight=weight; }
     }
 
     public RoomGraph(){
@@ -208,5 +214,32 @@ public class RoomGraph {
                 return r;
         }
         return null;
+    }
+
+    public Edge findEdgeByTwoRooms(RoomGraph.RoomRepresent current, RoomGraph.RoomRepresent parent) {
+            for (Edge e : edges) {
+                if (e.getE1() == current.getRoom() && e.getE2() == parent.getRoom()) {
+                    return e;
+                }
+            }
+        return null;
+    }
+
+    public void calculateDistance(RoomRepresent room1, RoomRepresent room2){
+        double room1x = room1.getDoorX();
+        double room1y = room1.getDoorY();
+        double room2x = room2.getDoorX();
+        double room2y = room2.getDoorY();
+        double distance=Math.sqrt((room2y - room1y) * (room2y - room1y) + (room2x - room1x) * (room2x - room1x));
+        Edge edge=findEdgeByTwoRooms(room1,room2);
+        edge.setWeight(distance);
+        Log.d("TAGDIS",""+distance);
+    }
+    public void setAlldistance(){
+        for(Edge e:edges){
+            RoomRepresent a=getRoomByName(e.getE1());
+            RoomRepresent b=getRoomByName(e.getE2());
+            calculateDistance(a,b);
+        }
     }
 }

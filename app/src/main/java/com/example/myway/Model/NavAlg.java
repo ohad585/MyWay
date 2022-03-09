@@ -1,5 +1,7 @@
 package com.example.myway.Model;
 
+import android.util.Log;
+
 import java.util.*;
 
 public class NavAlg {
@@ -41,7 +43,7 @@ public class NavAlg {
     }
 
     public String Dijkstra(RoomGraph.RoomRepresent start, RoomGraph.RoomRepresent destination){
-
+        g.setAlldistance();
         String text = "Djikstra :\n";
         // d[start]=0 (other vertex's d_value is infinity by default), S={0} , Q = vertex
         LinkedList<RoomGraph.RoomRepresent> set = new LinkedList<RoomGraph.RoomRepresent>();
@@ -86,10 +88,10 @@ public class NavAlg {
         }
         destination = g.getRoomByName(destination.getRoom());
         String text2="";
+        String pathString="";
         if(destination.parent==null)
             text="This path does not exist";
         else{
-
             text+=" Vertex ne set: "+set.size();
             //Dijkstra process finished, now we will take our path and print it
             Stack<RoomGraph.RoomRepresent> stack = new Stack<RoomGraph.RoomRepresent>();
@@ -98,15 +100,19 @@ public class NavAlg {
             while(current!=null){
                 stack.push(current);
                 text2+=current.getRoom()+" ";
+                if(current.parent!=null){
+                    RoomGraph.Edge currentEdge=g.findEdgeByTwoRooms(current,current.parent);
+                    pathString+=currentEdge.getInstruction()+"\n";
+                }
                 current = current.parent;
             }
             double path_length = destination.d_value;
 
             text+=" Nr.Hops:"+(stack.size()-1)+" Path length: "+String.format( "%.2f", path_length )+ "ns";
         }//fund else per ekzistencen e path
+        Log.d("TAGLiron",""+pathString);
         return text+"\n"+text2;
     }
-
 
 
 
@@ -141,4 +147,5 @@ public class NavAlg {
             return (str1 + str2).hashCode();
         }
     }
+
 }
