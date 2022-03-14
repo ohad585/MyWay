@@ -52,6 +52,10 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    private static final int PERMISSION_REQUEST_BLUETOOTH_SCAN = 2;
+    private static final int PERMISSION_REQUEST_BLUETOOTH = 3;
+    private static final int PERMISSION_REQUEST_FINE_LOCATION = 4;
+    private static final int PERMISSION_REQUEST_BLUETOOTH_ADMIN = 5;
 
     GoogleMap googleMap;
 
@@ -77,18 +81,25 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             startActivityForResult(enableIntent,REQUEST_ENABLE_BT);
         }
 
+        checkPermissions();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void checkPermissions(){
         if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("This app needs location access");
-            builder.setMessage("Please grant location access so this app can detect peripherals.");
-            builder.setPositiveButton(android.R.string.ok, null);
-            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-                }
-            });
-            builder.show();
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+        }
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, PERMISSION_REQUEST_BLUETOOTH_SCAN);
+        }
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, PERMISSION_REQUEST_BLUETOOTH);
+        }
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, PERMISSION_REQUEST_BLUETOOTH_ADMIN);
+        }
+        if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_FINE_LOCATION);
         }
     }
 
@@ -165,23 +176,48 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         switch (requestCode) {
             case PERMISSION_REQUEST_COARSE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    System.out.println("coarse location permission granted");
+                    Log.d("PERMISSION_TAG", "coarse location permission granted");
                 } else {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Functionality limited");
-                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                        }
-
-                    });
-                    builder.show();
+                    Log.d("PERMISSION_TAG", "coarse location permission NOT granted");
                 }
                 return;
             }
+            case PERMISSION_REQUEST_BLUETOOTH_SCAN:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PERMISSION_TAG", "bluetooth scan permission granted");
+                } else {
+                    Log.d("PERMISSION_TAG", "bluetooth scan permission NOT granted");
+                }
+                return;
+            }
+            case PERMISSION_REQUEST_BLUETOOTH:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PERMISSION_TAG", "bluetooth permission granted");
+                } else {
+                    Log.d("PERMISSION_TAG", "bluetooth permission NOT granted");
+                }
+                return;
+            }
+            case PERMISSION_REQUEST_FINE_LOCATION:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PERMISSION_TAG", "fine location permission granted");
+                } else {
+                    Log.d("PERMISSION_TAG", "fine location permission NOT granted");
+                }
+                return;
+            }
+            case PERMISSION_REQUEST_BLUETOOTH_ADMIN:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PERMISSION_TAG", "bluetooth admin permission granted");
+                } else {
+                    Log.d("PERMISSION_TAG", "bluetooth admin permission NOT granted");
+                }
+                return;
+            }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                return;
+
         }
     }
 
@@ -191,18 +227,26 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             Log.d("TAG", "onScanResult: " + result.toString());
         }
 
-        ;
+        @Override
+        public void onScanFailed(int errorCode) {
+            Log.d("TAG", "onScanFailed: "+errorCode);
+            super.onScanFailed(errorCode);
+        }
+
+
     };
 
 
         public void startScanning() {
-        System.out.println("start scanning");
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                btScanner.startScan(leScanCallback);
-            }
-        });
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                System.out.println("start scanning");
+//                btScanner.startScan(leScanCallback);
+//            }
+//        });
+
+          btScanner.startScan(leScanCallback);
     }
 
     public void stopScanning() {
