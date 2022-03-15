@@ -233,20 +233,18 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             super.onScanFailed(errorCode);
         }
 
-
     };
 
 
-        public void startScanning() {
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                System.out.println("start scanning");
-//                btScanner.startScan(leScanCallback);
-//            }
-//        });
+    public void startScanning() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("start scanning");
+                btScanner.startScan(leScanCallback);
+            }
+        });
 
-          btScanner.startScan(leScanCallback);
     }
 
     public void stopScanning() {
