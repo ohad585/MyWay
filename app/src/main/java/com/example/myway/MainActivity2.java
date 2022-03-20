@@ -56,6 +56,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     private static final int PERMISSION_REQUEST_BLUETOOTH = 3;
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 4;
     private static final int PERMISSION_REQUEST_BLUETOOTH_ADMIN = 5;
+    private static final int PERMISSION_REQUEST_BLUETOOTH_CONNECT = 6;
+    private static final int PERMISSION_REQUEST_BLUETOOTH_ADVERTISE = 7;
 
     GoogleMap googleMap;
 
@@ -63,6 +65,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermissions();
         setContentView(R.layout.activity_main2);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -81,7 +84,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             startActivityForResult(enableIntent,REQUEST_ENABLE_BT);
         }
 
-        checkPermissions();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -100,6 +103,12 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         }
         if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_FINE_LOCATION);
+        }
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, PERMISSION_REQUEST_BLUETOOTH_CONNECT);
+        }
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADVERTISE}, PERMISSION_REQUEST_BLUETOOTH_ADVERTISE);
         }
     }
 
@@ -211,6 +220,22 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                     Log.d("PERMISSION_TAG", "bluetooth admin permission granted");
                 } else {
                     Log.d("PERMISSION_TAG", "bluetooth admin permission NOT granted");
+                }
+                return;
+            }
+            case PERMISSION_REQUEST_BLUETOOTH_CONNECT:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PERMISSION_TAG", "bluetooth connect permission granted");
+                } else {
+                    Log.d("PERMISSION_TAG", "bluetooth connect permission NOT granted");
+                }
+                return;
+            }
+            case PERMISSION_REQUEST_BLUETOOTH_ADVERTISE:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PERMISSION_TAG", "bluetooth advertise permission granted");
+                } else {
+                    Log.d("PERMISSION_TAG", "bluetooth advertise permission NOT granted");
                 }
                 return;
             }
