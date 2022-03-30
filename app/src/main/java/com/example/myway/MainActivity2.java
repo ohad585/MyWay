@@ -33,6 +33,7 @@ import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

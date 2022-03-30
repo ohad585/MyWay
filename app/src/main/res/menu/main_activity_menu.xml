@@ -7,4 +7,11 @@
         android:title="Profile" />
     <item android:title="favorite locations" />
     <item android:title="Places history" />
+    <item
+        android:id="@+id/menu_app_bar_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Search"
+
+    app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
 </menu>
