@@ -1,6 +1,7 @@
 package com.example.myway;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -10,24 +11,25 @@ import android.os.Handler;
 import android.util.Log;
 
 public class Bluetooth {
-    private BluetoothLeScanner bluetoothLeScanner;
     private boolean scanning;
     private Handler handler ;
     BluetoothAdapter bluetoothAdapter;
 
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
-    private ScanCallback leScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
-            Log.d("TAGOhad", "onScanResult: "+result.getDevice().toString());
-        }
 
+    private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
+        @Override
+        public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
+            String name = bluetoothDevice.getName();
+            if(name != null){
+                Log.d("TAG", "onLeScan: "+bluetoothDevice.toString());
+            }
+        }
     };
 
 
-    public Bluetooth(BluetoothManager btManager, BluetoothAdapter btAdapter, BluetoothLeScanner btScanner) {
+    public Bluetooth(BluetoothAdapter btAdapter) {
         bluetoothAdapter = btAdapter;
         if (bluetoothAdapter == null) {
             Log.d("TAG", "Bluetooth: Device Dosent support Bluetooth");
@@ -35,8 +37,7 @@ public class Bluetooth {
         }
         handler = new Handler();
 
-        bluetoothLeScanner = btScanner;
-        Log.d("TAGOHAD", "Bluetooth: Calling ScanLeDevice");
+
         scanLeDevice();
     }
 
@@ -47,16 +48,16 @@ public class Bluetooth {
                 @Override
                 public void run() {
                     scanning = false;
-                    bluetoothLeScanner.stopScan(leScanCallback);
+                    bluetoothAdapter.stopLeScan(leScanCallback);
                 }
             }, SCAN_PERIOD);
 
             scanning = true;
             Log.d("TAGOHAD", "scanLeDevice: Starting to scan");
-            bluetoothLeScanner.startScan(leScanCallback);
+            bluetoothAdapter.startLeScan(leScanCallback);
         } else {
             scanning = false;
-            bluetoothLeScanner.stopScan(leScanCallback);
+            bluetoothAdapter.startLeScan(leScanCallback);
         }
     }
 }

@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -48,16 +49,9 @@ import android.os.AsyncTask;
 public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
     BluetoothManager btManager;
     BluetoothAdapter btAdapter;
-    BluetoothLeScanner btScanner;
 
     private final static int REQUEST_ENABLE_BT = 1;
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    private static final int PERMISSION_REQUEST_BLUETOOTH_SCAN = 2;
-    private static final int PERMISSION_REQUEST_BLUETOOTH = 3;
-    private static final int PERMISSION_REQUEST_FINE_LOCATION = 4;
-    private static final int PERMISSION_REQUEST_BLUETOOTH_ADMIN = 5;
-    private static final int PERMISSION_REQUEST_BLUETOOTH_CONNECT = 6;
-    private static final int PERMISSION_REQUEST_BLUETOOTH_ADVERTISE = 7;
+    private static final int PERMISSION_REQUEST = 1;
 
     GoogleMap googleMap;
 
@@ -65,51 +59,33 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkPermissions();
         setContentView(R.layout.activity_main2);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         //RoomGraph g = new RoomGraph();
         //Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
 
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
-        btScanner = btAdapter.getBluetoothLeScanner();
-
-
 
         if (btAdapter != null && !btAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent,REQUEST_ENABLE_BT);
         }
 
-
+        checkPermissions();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkPermissions(){
-        if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || this.checkSelfPermission(Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.FOREGROUND_SERVICE}, PERMISSION_REQUEST);
+            }else setup();
         }
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, PERMISSION_REQUEST_BLUETOOTH_SCAN);
-        }
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, PERMISSION_REQUEST_BLUETOOTH);
-        }
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, PERMISSION_REQUEST_BLUETOOTH_ADMIN);
-        }
-        if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_FINE_LOCATION);
-        }
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, PERMISSION_REQUEST_BLUETOOTH_CONNECT);
-        }
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADVERTISE}, PERMISSION_REQUEST_BLUETOOTH_ADVERTISE);
-        }
+    }
+
+    private void setup() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -163,9 +139,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
             }
         });
-        //Bluetooth ble = new Bluetooth(btManager,btAdapter,btScanner);
-        startScanning();
-
+        new Bluetooth(btAdapter);
     }
 
 
@@ -182,104 +156,17 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        if(grantResults.length==0){
+            return;
+        }
         switch (requestCode) {
-            case PERMISSION_REQUEST_COARSE_LOCATION: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "coarse location permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "coarse location permission NOT granted");
-                }
+            case PERMISSION_REQUEST:
+                setup();
                 return;
-            }
-            case PERMISSION_REQUEST_BLUETOOTH_SCAN:{
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "bluetooth scan permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "bluetooth scan permission NOT granted");
-                }
-                return;
-            }
-            case PERMISSION_REQUEST_BLUETOOTH:{
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "bluetooth permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "bluetooth permission NOT granted");
-                }
-                return;
-            }
-            case PERMISSION_REQUEST_FINE_LOCATION:{
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "fine location permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "fine location permission NOT granted");
-                }
-                return;
-            }
-            case PERMISSION_REQUEST_BLUETOOTH_ADMIN:{
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "bluetooth admin permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "bluetooth admin permission NOT granted");
-                }
-                return;
-            }
-            case PERMISSION_REQUEST_BLUETOOTH_CONNECT:{
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "bluetooth connect permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "bluetooth connect permission NOT granted");
-                }
-                return;
-            }
-            case PERMISSION_REQUEST_BLUETOOTH_ADVERTISE:{
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION_TAG", "bluetooth advertise permission granted");
-                } else {
-                    Log.d("PERMISSION_TAG", "bluetooth advertise permission NOT granted");
-                }
-                return;
-            }
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                return;
-
         }
     }
 
-    private ScanCallback leScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            Log.d("TAG", "onScanResult: " + result.toString());
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            Log.d("TAG", "onScanFailed: "+errorCode);
-            super.onScanFailed(errorCode);
-        }
-
-    };
-
-
-    public void startScanning() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("start scanning");
-                btScanner.startScan(leScanCallback);
-            }
-        });
-
-    }
-
-    public void stopScanning() {
-        System.out.println("stopping scanning");
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                btScanner.stopScan(leScanCallback);
-            }
-        });
-    }
 
 }
