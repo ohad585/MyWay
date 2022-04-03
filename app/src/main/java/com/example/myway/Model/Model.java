@@ -1,5 +1,6 @@
 package com.example.myway.Model;
 
+import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -35,6 +36,12 @@ public class Model {
     }
     public LiveData<List<Room>> getAll(){
         return roomsListLd;
+    }
+
+    public List<String> getBluetoothDevices() {
+        List<String> devices = new LinkedList<>();
+
+        return devices;
     }
 
 

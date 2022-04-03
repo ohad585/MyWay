@@ -3,52 +3,36 @@ package com.example.myway;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.LiveData;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanResult;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.myway.Model.Model;
-import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
-import com.example.myway.Model.RoomGraph;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONException;
-
 import java.util.LinkedList;
 import java.util.List;
-import android.os.AsyncTask;
 
 
 public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
-    BluetoothManager btManager;
-    BluetoothAdapter btAdapter;
+    private BluetoothManager btManager;
+    private BluetoothAdapter btAdapter;
+    private Bluetooth bleInterface;
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
@@ -65,7 +49,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
-
+        bleInterface = new Bluetooth(btAdapter);
         if (btAdapter != null && !btAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent,REQUEST_ENABLE_BT);
@@ -139,7 +123,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
             }
         });
-        new Bluetooth(btAdapter);
+
     }
 
 
