@@ -22,7 +22,6 @@ import java.util.LinkedList;
 
 public class ModelFirebase {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 

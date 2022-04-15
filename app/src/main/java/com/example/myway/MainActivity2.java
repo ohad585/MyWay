@@ -2,13 +2,10 @@ package com.example.myway;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.LiveData;
 
-import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.myway.Model.Model;
 import com.example.myway.Model.NavAlg;
@@ -19,20 +16,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import org.json.JSONException;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMap;
+    TextView instructionTV;
+    RoomGraph g;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +36,15 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        RoomGraph g = new RoomGraph();
+        g = new RoomGraph();
         Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
-
+        //Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+        instructionTV=findViewById(R.id.instruction_mainactivity);
+        instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
     }
+
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap1) {
@@ -75,12 +75,13 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //                                    .position((LatLng) p.getPoints().get(0))
 //                                    .title(r.getDetails()));
                     polygonList.add(p);
+
                 }
             }
+
         });
 
 
-        drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
 
         // Display traffic.
         googleMap.setTrafficEnabled(true);
@@ -97,19 +98,26 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
             }
         });
+        //drowPath();
 
     }
 
+    private void drowPath() {
+        for(int i=0;i<NavAlg.instance.arrayListOfRooms().size()-2;i++){
+            drawPolylineBetween2Rooms(
+                    g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
+                    g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i+1)));
+        }
+    }
 
-
-    private void drowPolylineBetween2Points(double pointAX,double pointAY,double pointBX,double pointBY) {
+    private void drawPolylineBetween2Rooms(RoomGraph.RoomRepresent roomA, RoomGraph.RoomRepresent roomB) {
         Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
                 .clickable(true)
                 .add(
-                        new LatLng(pointAX,pointAY),
-                        new LatLng(pointBX,pointBY)));
+                        new LatLng(roomA.getDoorX(),roomA.getDoorY()),
+                        new LatLng(roomB.getDoorX(),roomB.getDoorY())));
 
     }
 
-
 }
+

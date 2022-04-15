@@ -4,11 +4,13 @@ import android.util.Log;
 
 import java.util.*;
 
-public class NavAlg {
+public class NavAlg  {
     public static NavAlg instance = new NavAlg();
 
     private RoomGraph g;
     private HashMap<StringKey,List<String >> paths = new HashMap<>();
+    private ArrayList<String> arrayListOfInstruction=new ArrayList<>();
+    private ArrayList<String> arrayListOfRooms=new ArrayList<String>();
 
     private NavAlg(){
         g=new RoomGraph();
@@ -102,9 +104,12 @@ public class NavAlg {
                 text2+=current.getRoom()+" ";
                 if(current.parent!=null){
                     RoomGraph.Edge currentEdge=g.findEdgeByTwoRooms(current,current.parent);
+                    arrayListOfInstruction(pathString);
                     pathString+=currentEdge.getInstruction()+"\n";
                 }
+                arrayListOfRooms.add(current.getRoom());
                 current = current.parent;
+
             }
             double path_length = destination.d_value;
 
@@ -112,6 +117,19 @@ public class NavAlg {
         }//fund else per ekzistencen e path
         Log.d("TAGLiron",""+pathString);
         return text+"\n"+text2;
+    }
+
+    public void arrayListOfInstruction(String instruction){
+        if(instruction!=""){
+            arrayListOfInstruction.add(instruction);
+        }
+    }
+
+    public ArrayList<String> arrayListOfInstruction(){
+        return arrayListOfInstruction;
+    }
+    public ArrayList<String> arrayListOfRooms(){
+        return arrayListOfRooms;
     }
 
 

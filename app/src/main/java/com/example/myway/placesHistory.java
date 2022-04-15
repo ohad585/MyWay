@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.myway.Model.Room;
 
-public class favoritePlace extends Fragment {
+public class placesHistory extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     View progBar;
@@ -25,10 +25,10 @@ public class favoritePlace extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.favorite_place_fragment, container, false);
-        progBar = view.findViewById(R.id.fav_place_progressBar);
+        View view = inflater.inflate(R.layout.places_history_fragment, container, false);
+        progBar = view.findViewById(R.id.places_history_progressBar);
         //progBar.setVisibility(View.INVISIBLE);
-        RecyclerView list = view.findViewById(R.id.fav_place_rv);
+        RecyclerView list = view.findViewById(R.id.places_history_rv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -45,8 +45,8 @@ public class favoritePlace extends Fragment {
 
         public MyViewHolder(@NonNull View itemView, AdapterView.OnItemClickListener listener) {
             super(itemView);
-            placeNameTV = itemView.findViewById(R.id.fav_place_row_name);
-            ifFavBtn = itemView.findViewById(R.id.fav_place_row_chip);
+            placeNameTV = itemView.findViewById(R.id.places_history_row_name);
+            ifFavBtn = itemView.findViewById(R.id.places_history_row_chip);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,8 +70,8 @@ public class favoritePlace extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.fav_place_row, parent, false);
-            MyViewHolder holder = new MyViewHolder(view, listener);
+            View view = getLayoutInflater().inflate(R.layout.place_history_row, parent, false);
+           MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }
 
@@ -81,14 +81,12 @@ public class favoritePlace extends Fragment {
             // holder.bind(r);
         }
 
-
         @Override
         public int getItemCount() {
 //            if (allRoomsList == null) return 0;
 //            return allRoomsList.size();
             return 1;
         }
-
-
     }
+
 }
