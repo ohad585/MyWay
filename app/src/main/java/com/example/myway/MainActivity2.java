@@ -1,12 +1,19 @@
 package com.example.myway;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
@@ -20,37 +27,67 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
+    private BluetoothManager btManager;
+    private BluetoothAdapter btAdapter;
+    private Bluetooth bleInterface;
+
+    private final static int REQUEST_ENABLE_BT = 1;
+    private static final int PERMISSION_REQUEST = 1;
+
     GoogleMap googleMap;
     TextView instructionTV;
     RoomGraph g;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        //RoomGraph g = new RoomGraph();
+        //Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
+
+        btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        btAdapter = btManager.getAdapter();
+        bleInterface = new Bluetooth(btAdapter);
+        if (btAdapter != null && !btAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+
+        checkPermissions();
+    }
+
+    private void checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || this.checkSelfPermission(Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.FOREGROUND_SERVICE}, PERMISSION_REQUEST);
+            } else setup();
+        }
+    }
+
+    private void setup() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         g = new RoomGraph();
-        Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
+        Log.d("TAG123", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("168"), g.getRoomByName("J2")));
         //Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
-        instructionTV=findViewById(R.id.instruction_mainactivity);
+        instructionTV = findViewById(R.id.instruction_mainactivity);
         instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
     }
-
-
 
 
     @Override
     public void onMapReady(GoogleMap googleMap1) {
         GoogleMap.OnPolygonClickListener listener = null;
-        googleMap=googleMap1;
-        List<Polygon> polygonList=new LinkedList<>();
+        googleMap = googleMap1;
+        List<Polygon> polygonList = new LinkedList<>();
         // Set the map coordinates to Sami shamoon ashdod.
         LatLng samiShamoon = new LatLng(31.80687, 34.65846);
         // Set the map type to Normal.
@@ -65,7 +102,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
-                for(Room r:roomList){
+                for (Room r : roomList) {
                     //Log.d("TAG112", "onMapReady: "+r.getDetails());
                     Polygon p = googleMap.addPolygon(r.retPolygonOptions());
                     p.setClickable(true);
@@ -80,7 +117,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             }
 
         });
-
 
 
         // Display traffic.
@@ -103,10 +139,10 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void drowPath() {
-        for(int i=0;i<NavAlg.instance.arrayListOfRooms().size()-2;i++){
+        for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 2; i++) {
             drawPolylineBetween2Rooms(
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
-                    g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i+1)));
+                    g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i + 1)));
         }
     }
 
@@ -114,10 +150,24 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
                 .clickable(true)
                 .add(
-                        new LatLng(roomA.getDoorX(),roomA.getDoorY()),
-                        new LatLng(roomB.getDoorX(),roomB.getDoorY())));
+                        new LatLng(roomA.getDoorX(), roomA.getDoorY()),
+                        new LatLng(roomB.getDoorX(), roomB.getDoorY())));
 
     }
 
-}
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (grantResults.length == 0) {
+            return;
+        }
+        switch (requestCode) {
+            case PERMISSION_REQUEST:
+                setup();
+                return;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
+}

@@ -139,7 +139,6 @@ public class ModelFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Room s = Room.fromJson(doc.getData());
-                        Log.d("TAG", "onComplete: " + s.getDetails());
                         if (s != null) {
                             roomList.add(s);
                         }
