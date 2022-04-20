@@ -121,7 +121,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         });
 
 
-        drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
 
         // Display traffic.
         googleMap.setTrafficEnabled(true);
@@ -140,26 +139,26 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         });
         //drowPath();
 
-        List<IBeacon> beacons = new LinkedList<>();
-        beacons.add(new IBeacon("000","168",34.65844,31.80686));
-        beacons.add(new IBeacon("001","J1",34.65828,31.80693));
-        beacons.add(new IBeacon("002","J2",34.65836,31.80704));
-        beacons.add(new IBeacon("003","J3",34.65824,31.80702));
-        beacons.add(new IBeacon("004","161",34.65785,31.80723));
-        beacons.add(new IBeacon("005","163",34.65797,31.80718));
-        beacons.add(new IBeacon("006","165",34.65814,31.80714));
-        beacons.add(new IBeacon("007","166A",34.65829,31.80706));
-        beacons.add(new IBeacon("008","Fr",0,0));
-        beacons.add(new IBeacon("009","Fr",0,0));
-
-        for(IBeacon b : beacons){
-            Model.instance.saveIBeacon(b, new Model.SaveIBeaconListener() {
-                @Override
-                public void onComplete() {
-                    Log.d("TAG", "onComplete: IBeacon "+b.getName()+" saved");
-                }
-            });
-        }
+//        List<IBeacon> beacons = new LinkedList<>();
+//        beacons.add(new IBeacon("000","168",34.65844,31.80686));
+//        beacons.add(new IBeacon("001","J1",34.65828,31.80693));
+//        beacons.add(new IBeacon("002","J2",34.65836,31.80704));
+//        beacons.add(new IBeacon("003","J3",34.65824,31.80702));
+//        beacons.add(new IBeacon("004","161",34.65785,31.80723));
+//        beacons.add(new IBeacon("005","163",34.65797,31.80718));
+//        beacons.add(new IBeacon("006","165",34.65814,31.80714));
+//        beacons.add(new IBeacon("007","166A",34.65829,31.80706));
+//        beacons.add(new IBeacon("008","Fr",0,0));
+//        beacons.add(new IBeacon("009","Fr",0,0));
+//
+//        for(IBeacon b : beacons){
+//            Model.instance.saveIBeacon(b, new Model.SaveIBeaconListener() {
+//                @Override
+//                public void onComplete() {
+//                    Log.d("TAG", "onComplete: IBeacon "+b.getName()+" saved");
+//                }
+//            });
+//        }
     }
 
     private void drowPath() {
