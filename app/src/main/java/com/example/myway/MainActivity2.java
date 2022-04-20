@@ -15,8 +15,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.example.myway.Model.IBeacon;
+import com.example.myway.Functions.UserLocationAPI;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
@@ -97,12 +97,10 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         // Set the map type to Normal.
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         // Add a marker on the map coordinates.
-        googleMap.addMarker(new MarkerOptions()
-                .position(samiShamoon)
-                .title("Sami"));
+        googleMap.addMarker(new MarkerOptions().position(samiShamoon).title("Sami"));
         // Move the camera to the map coordinates and zoom in closer.
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(samiShamoon));
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(22));
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
@@ -159,6 +157,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //                }
 //            });
 //        }
+        new UserLocationAPI(googleMap,bleInterface,getResources());
     }
 
     private void drowPath() {
