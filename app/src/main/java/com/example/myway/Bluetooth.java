@@ -16,6 +16,7 @@ import com.example.myway.Model.Model;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 @SuppressLint("MissingPermission")
 public class Bluetooth {
@@ -28,6 +29,8 @@ public class Bluetooth {
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
     private static final long SCAN_INTERVAL = 6000;
+    private static final long RESET_INTERVAL = 6000;
+
 
     private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -89,5 +92,15 @@ public class Bluetooth {
 
     public HashMap<String, BluetoothRep> getDevicesFound(){
         return devicesFound;
+    }
+
+    public void resetBeaconsFound(){
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                //System.out.println("myHandler: here!"); // Do your work here
+                devicesFound = new LinkedHashMap<>();
+                handler.postDelayed(this, RESET_INTERVAL);
+            }
+        }, RESET_INTERVAL);
     }
 }
