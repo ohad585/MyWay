@@ -175,4 +175,42 @@ public class ModelFirebase {
             }
         });
     }
+
+    public void getAllBeacons(Model.GetAllBeaconsListener listener) {
+        db.collection("Beacons")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<IBeacon> beaconList = new LinkedList<IBeacon>();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        IBeacon b = IBeacon.fromJson(doc.getData());
+                        if (b != null) {
+                            beaconList.add(b);
+                        }
+                    }
+                } else {
+
+                }
+                listener.onComplete(beaconList);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
+
+    }
+
+    public void saveIBeacon(IBeacon b, Model.SaveIBeaconListener listener) {
+        db.collection("Beacons")
+                .add(b.toJson())
+                .addOnSuccessListener((successListener) -> {
+                    listener.onComplete();
+                })
+                .addOnFailureListener((e) -> {
+                    Log.d("TAG", e.getMessage());
+                });
+    }
 }

@@ -14,6 +14,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.example.myway.Model.IBeacon;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
@@ -27,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,11 +67,11 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         checkPermissions();
     }
 
-    private void checkPermissions() {
+    private void checkPermissions(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || this.checkSelfPermission(Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.FOREGROUND_SERVICE}, PERMISSION_REQUEST);
-            } else setup();
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.FOREGROUND_SERVICE}, PERMISSION_REQUEST);
+            }else setup();
         }
     }
 
@@ -86,8 +90,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap1) {
         GoogleMap.OnPolygonClickListener listener = null;
-        googleMap = googleMap1;
-        List<Polygon> polygonList = new LinkedList<>();
+        googleMap=googleMap1;
+        List<Polygon> polygonList=new LinkedList<>();
         // Set the map coordinates to Sami shamoon ashdod.
         LatLng samiShamoon = new LatLng(31.80687, 34.65846);
         // Set the map type to Normal.
@@ -102,7 +106,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
-                for (Room r : roomList) {
+                for(Room r:roomList){
                     //Log.d("TAG112", "onMapReady: "+r.getDetails());
                     Polygon p = googleMap.addPolygon(r.retPolygonOptions());
                     p.setClickable(true);
@@ -112,12 +116,12 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //                                    .position((LatLng) p.getPoints().get(0))
 //                                    .title(r.getDetails()));
                     polygonList.add(p);
-
                 }
             }
-
         });
 
+
+        drowPolylineBetween2Points(31.8072, 34.65801,31.80714, 34.65814);
 
         // Display traffic.
         googleMap.setTrafficEnabled(true);
@@ -136,6 +140,26 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         });
         //drowPath();
 
+        List<IBeacon> beacons = new LinkedList<>();
+        beacons.add(new IBeacon("000","168",34.65844,31.80686));
+        beacons.add(new IBeacon("001","J1",34.65828,31.80693));
+        beacons.add(new IBeacon("002","J2",34.65836,31.80704));
+        beacons.add(new IBeacon("003","J3",34.65824,31.80702));
+        beacons.add(new IBeacon("004","161",34.65785,31.80723));
+        beacons.add(new IBeacon("005","163",34.65797,31.80718));
+        beacons.add(new IBeacon("006","165",34.65814,31.80714));
+        beacons.add(new IBeacon("007","166A",34.65829,31.80706));
+        beacons.add(new IBeacon("008","Fr",0,0));
+        beacons.add(new IBeacon("009","Fr",0,0));
+
+        for(IBeacon b : beacons){
+            Model.instance.saveIBeacon(b, new Model.SaveIBeaconListener() {
+                @Override
+                public void onComplete() {
+                    Log.d("TAG", "onComplete: IBeacon "+b.getName()+" saved");
+                }
+            });
+        }
     }
 
     private void drowPath() {
@@ -169,5 +193,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
 
 }

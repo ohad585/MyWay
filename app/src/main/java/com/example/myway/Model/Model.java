@@ -113,4 +113,17 @@ public class Model {
         modelFirebase.GetRoomDetails(p,listener);
     }
 
+    public interface GetAllBeaconsListener {
+        void onComplete(List<IBeacon> beacons);
+    }
+    public void getAllBeacons(GetAllBeaconsListener listener){
+        modelFirebase.getAllBeacons(listener);
+    }
+
+    public interface SaveIBeaconListener{
+        void onComplete();
+    }
+    public void saveIBeacon(IBeacon b , SaveIBeaconListener listener){
+        modelFirebase.saveIBeacon(b,listener);
+    }
 }
