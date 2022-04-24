@@ -16,6 +16,7 @@ public class BluetoothRep {
     public BluetoothRep(BluetoothDevice bDevice, int rssi){
 
         device = bDevice;
+
         distance = calcDistance(rssi);
     }
 

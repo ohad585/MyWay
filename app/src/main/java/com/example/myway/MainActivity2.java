@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -39,6 +41,9 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     private BluetoothManager btManager;
     private BluetoothAdapter btAdapter;
     private Bluetooth bleInterface;
+    private UserLocationAPI userLocationAPI;
+
+    private Button checkloc_btn;
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
@@ -55,7 +60,13 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_main2);
         //RoomGraph g = new RoomGraph();
         //Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
-
+        checkloc_btn = findViewById(R.id.checkloc_btn);
+        checkloc_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userLocationAPI.init();
+            }
+        });
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
         bleInterface = new Bluetooth(btAdapter);
@@ -115,10 +126,14 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //                                    .title(r.getDetails()));
                     polygonList.add(p);
                 }
+                onRoomsReady();
             }
         });
+    }
 
+    private void onRoomsReady() {
 
+        bleInterface.runScan();
 
         // Display traffic.
         googleMap.setTrafficEnabled(true);
@@ -157,7 +172,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //                }
 //            });
 //        }
-        new UserLocationAPI(googleMap,bleInterface,getResources());
+        userLocationAPI = new UserLocationAPI(googleMap,bleInterface,getResources());
+
     }
 
     private void drowPath() {

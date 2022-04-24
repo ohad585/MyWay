@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 @SuppressLint("MissingPermission")
 public class Bluetooth {
     private boolean scanning;
@@ -25,21 +28,28 @@ public class Bluetooth {
     BluetoothAdapter bluetoothAdapter;
     private List<String> devicesToBeFound;
     private HashMap<String, BluetoothRep> devicesFound;
+    private ReentrantLock devicesFoundLock;
 
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
-    private static final long SCAN_INTERVAL = 6000;
-    private static final long RESET_INTERVAL = 6000;
+    private static final long SCAN_PERIOD = 2000;
+    private static final long SCAN_INTERVAL = 3000;
+    private static final long RESET_INTERVAL = 20000;
 
 
-    private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
+    private final BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
-            String addr = bluetoothDevice.getAddress();
+            String addr = bluetoothDevice.getName();
             if(addr != null){
-                Log.d("TAG", "onLeScan: "+bluetoothDevice.getName());
                 if(devicesToBeFound.contains(addr)){
-                    devicesFound.put(addr,new BluetoothRep(bluetoothDevice,i));
+                    try {
+                        devicesFoundLock.lock();
+                        Log.d("TAG", "onLeScan: "+bluetoothDevice.getName());
+                        devicesFound.put(addr,new BluetoothRep(bluetoothDevice,i));
+                    }finally {
+                        devicesFoundLock.unlock();
+                    }
+
                 }
             }
         }
@@ -48,18 +58,25 @@ public class Bluetooth {
 
 
     public Bluetooth(BluetoothAdapter btAdapter) {
+        devicesFoundLock = new ReentrantLock();
         bluetoothAdapter = btAdapter;
+        devicesFound = new LinkedHashMap<>();
         if (bluetoothAdapter == null) {
             Log.d("TAG", "Bluetooth: Device Dosent support Bluetooth");
             // Device doesn't support Bluetooth
         }
         handler = new Handler();
-        devicesToBeFound = Model.instance.getBluetoothDevices();
+        Model.instance.getBluetoothDevices(new Model.getBluetoothDevicesListener() {
+            @Override
+            public void onComplete(List<String> devices) {
+                devicesToBeFound = devices;
+            }
+        });
 
     }
 
     //Will run scan every SCAN_INTERVAL
-    private void runScan(){
+    public void runScan(){
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -89,16 +106,28 @@ public class Bluetooth {
             bluetoothAdapter.startLeScan(leScanCallback);
         }
     }
+    public interface getDevicesFoundListener {
+        void onComplete(HashMap<String, BluetoothRep> devices);
+    }
+    public void getDevicesFound(getDevicesFoundListener listener){
+        try {
+            devicesFoundLock.lock();
+            listener.onComplete(devicesFound);
+        }finally {
+            devicesFoundLock.unlock();
+        }
 
-    public HashMap<String, BluetoothRep> getDevicesFound(){
-        return devicesFound;
     }
 
     public void resetBeaconsFound(){
         handler.postDelayed(new Runnable() {
             public void run() {
-                //System.out.println("myHandler: here!"); // Do your work here
-                devicesFound = new LinkedHashMap<>();
+                try{
+                    devicesFoundLock.lock();
+                    devicesFound = new LinkedHashMap<>();
+                }finally {
+                    devicesFoundLock.unlock();
+                }
                 handler.postDelayed(this, RESET_INTERVAL);
             }
         }, RESET_INTERVAL);

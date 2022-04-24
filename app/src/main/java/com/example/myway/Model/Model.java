@@ -37,11 +37,20 @@ public class Model {
     public LiveData<List<Room>> getAll(){
         return roomsListLd;
     }
-
-    public List<String> getBluetoothDevices() {
+    public interface getBluetoothDevicesListener{
+        void onComplete(List<String> devices);
+    }
+    public void getBluetoothDevices(getBluetoothDevicesListener listener) {
         List<String> devices = new LinkedList<>();
-
-        return devices;
+        modelFirebase.getAllBeacons(new GetAllBeaconsListener() {
+            @Override
+            public void onComplete(List<IBeacon> beacons) {
+                for(IBeacon beacon:beacons){
+                    devices.add(beacon.getUid());
+                }
+                listener.onComplete(devices);
+            }
+        });
     }
 
 
