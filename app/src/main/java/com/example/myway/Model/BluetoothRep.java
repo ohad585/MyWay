@@ -16,6 +16,7 @@ public class BluetoothRep {
     public BluetoothRep(BluetoothDevice bDevice, int rssi){
 
         device = bDevice;
+
         distance = calcDistance(rssi);
     }
 
@@ -24,7 +25,7 @@ public class BluetoothRep {
         if (rssi==0){
             return Integer.MAX_VALUE;
         }
-        float temp = (RSSI_AT_ONE_METER - rssi)/(10*ENVIROMENTAL_FACTOR);
+        double temp = (RSSI_AT_ONE_METER - rssi)/(10*ENVIROMENTAL_FACTOR);
         d=Math.pow(10,temp);
         return d;
     }

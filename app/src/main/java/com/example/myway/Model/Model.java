@@ -38,10 +38,29 @@ public class Model {
         return roomsListLd;
     }
 
-    public List<String> getBluetoothDevices() {
-        List<String> devices = new LinkedList<>();
+    public LiveData<List<Room>> getAllRoomHistory() {
+        return null;
+    }
 
-        return devices;
+    public LiveData<List<Room>> getAllFavoritePlaces() {
+        return null;
+
+    }
+
+    public interface getBluetoothDevicesListener{
+        void onComplete(List<String> devices);
+    }
+    public void getBluetoothDevices(getBluetoothDevicesListener listener) {
+        List<String> devices = new LinkedList<>();
+        modelFirebase.getAllBeacons(new GetAllBeaconsListener() {
+            @Override
+            public void onComplete(List<IBeacon> beacons) {
+                for(IBeacon beacon:beacons){
+                    devices.add(beacon.getUid());
+                }
+                listener.onComplete(devices);
+            }
+        });
     }
 
 

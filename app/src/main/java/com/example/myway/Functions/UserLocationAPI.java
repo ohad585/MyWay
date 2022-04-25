@@ -1,6 +1,8 @@
 package com.example.myway.Functions;
 
-import android.app.Activity;
+import static java.lang.Math.pow;
+
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.util.Log;
 
 import com.example.myway.Bluetooth;
 import com.example.myway.Model.BluetoothRep;
+import com.example.myway.Model.IBeacon;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.Room;
 import com.example.myway.R;
@@ -20,12 +23,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class UserLocationAPI {
     private LatLng userLocation;
     private List<Room> allRooms;
-    private HashMap<String,BluetoothRep> iBeacons;
+    private HashMap<String,BluetoothRep> iBeaconsInRange;
+    private List<IBeacon> allBeacons;
     private GoogleMap googleMap;
     private Bluetooth bleAPI;
     private Resources appRes;
@@ -39,13 +44,19 @@ public class UserLocationAPI {
         appRes = resources;
         googleMap=gm;
         bleAPI = ble;
-        //iBeacons = bleAPI.getDevicesFound();
-        iBeacons = new HashMap<>();
+        userLocation = SAMISHAMOON;
+        setUserIcon();
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
                 allRooms=roomList;
-                calcUserLocation();
+                Model.instance.getAllBeacons(new Model.GetAllBeaconsListener() {
+                    @Override
+                    public void onComplete(List<IBeacon> beacons) {
+                        allBeacons = beacons;
+                        init();
+                    }
+                });
             }
         });
 
@@ -77,36 +88,128 @@ public class UserLocationAPI {
         userMarker.setPosition(userLocation);
     }
 
-    private void calcUserLocation() {
+    public void init(){
+        bleAPI.getDevicesFound(new Bluetooth.getDevicesFoundListener() {
+            @Override
+            public void onComplete(HashMap<String, BluetoothRep> devices) {
+                iBeaconsInRange = devices;
+                calcUserLocationNearestBeacon();
+            }
+        });
+    }
 
-        if(iBeacons.size()<2){
+    @SuppressLint("MissingPermission")
+    private void calcUserLocationNearestBeacon(){
+        if(iBeaconsInRange == null){
+            Log.d("TAG", "calcUserLocation: iBeaconsInRange is null ");
+            return;
+        }
+        List<String> keys = new LinkedList<>();
+        for(String key:iBeaconsInRange.keySet()){
+            keys.add(key);
+        }
+
+        if(iBeaconsInRange.size()==1){
+            for(IBeacon beacon:allBeacons){
+                if(beacon.getUid().matches((iBeaconsInRange.get(keys.get(0))).getDevice().getName())){
+                    double x = beacon.getLatitude();
+                    double y = beacon.getLongitude();
+                    userLocation = new LatLng(y,x);
+                    updateUserIconLocation();
+                    return;
+                }
+            }
+        }else {
+            double x,y,r;
+            double tempx,tempy,tempr;
+            tempr=1000;
+            tempx=1;
+            tempy=1;
+            x=1;
+            y=1;
+            r=Integer.MAX_VALUE;
+            for(int i = 0;i<iBeaconsInRange.size();i++){
+                for(IBeacon iBeacon : allBeacons){
+                    if(iBeacon.getUid().matches(iBeaconsInRange.get(keys.get(i)).getDevice().getName())){
+                        tempx=iBeacon.getLatitude();
+                        tempy =iBeacon.getLongitude();
+                        tempr = iBeaconsInRange.get(keys.get(i)).getDistance();
+                        break;
+                    }
+                }
+                if(tempr<r){
+                    x=tempx;
+                    y=tempy;
+                    r=tempr;
+                }
+            }
+            if(x!=1 && y!=1){
+                userLocation = new LatLng(y,x);
+                updateUserIconLocation();
+            }else Log.d("TAG", "calcUserLocationNearestBeacon: X,Y didnt changed");
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void calcUserExactLocation() {
+
+        if(iBeaconsInRange == null){
+            Log.d("TAG", "calcUserLocation: iBeaconsInRange is null ");
+            return;
+        }
+        if(iBeaconsInRange.size()<2){
             userLocation = SAMISHAMOON;
             setUserIcon();
         }else {
-            if(iBeacons.size()==2){
+            if(iBeaconsInRange.size()==2){
 
 
             }else {
                 //iBeacons size is 3 or more, we will only use 3 .
-                List<String> keys = (List<String>) iBeacons.keySet();
+                List<String> keys = new LinkedList<>();
+                for(String key:iBeaconsInRange.keySet()){
+                    keys.add(key);
+                }
+
                 Log.d("TAG", "calcUserLocation: "+keys.toString());
-                //float xa = (iBeacons.get(keys.get(0))).getDevice().
-                float ya = beacon1.locationY;
-                float xb = beacon2.locationX;
-                float yb = beacon2.locationY;
-                float xc = beacon3.locationX;
-                float yc = beacon3.locationY;
-                float ra = beacon1.filteredDistance;
-                float rb = beacon2.filteredDistance;
-                float rc = beacon3.filteredDistance;
+                double xa,ya,ra,xb,yb,rb,xc,yc,rc;
+                xa =1 ;
+                ya =1 ;
+                ra =2 ;
+                xb =1 ;
+                yb =1 ;
+                rb =2 ;
+                xc =1 ;
+                yc =1 ;
+                rc =2 ;
 
-                float S = (pow(xc, 2.) - pow(xb, 2.) + pow(yc, 2.) - pow(yb, 2.) + pow(rb, 2.) - pow(rc, 2.)) / 2.0;
-                float T = (pow(xa, 2.) - pow(xb, 2.) + pow(ya, 2.) - pow(yb, 2.) + pow(rb, 2.) - pow(ra, 2.)) / 2.0;
-                float y = ((T * (xb - xc)) - (S * (xb - xa))) / (((ya - yb) * (xb - xc)) - ((yc - yb) * (xb - xa)));
-                float x = ((y * (ya - yb)) - T) / (xb - xa);
+                for(IBeacon iBeacon : allBeacons){
+                    if(iBeacon.getUid().matches((iBeaconsInRange.get(keys.get(0))).getDevice().getName())){
+                        xa = iBeacon.getLatitude();
+                        ya = iBeacon.getLongitude();
+                        ra = (iBeaconsInRange.get(keys.get(0))).getDistance();
+                        continue;
+                    }
+                    if(iBeacon.getUid().matches((iBeaconsInRange.get(keys.get(1))).getDevice().getName())){
+                        xb = iBeacon.getLatitude();
+                        yb = iBeacon.getLongitude();
+                        rb = (iBeaconsInRange.get(keys.get(1))).getDistance();
+                        continue;
+                    }
+                    if(iBeacon.getUid().matches((iBeaconsInRange.get(keys.get(2))).getDevice().getName())){
+                        xc = iBeacon.getLatitude();
+                        yc = iBeacon.getLongitude();
+                        rc = (iBeaconsInRange.get(keys.get(2))).getDistance();
+                    }
+                }
 
-                CGPoint point = CGPointMake(x, y);
+                double S = (pow(xc, 2.) - pow(xb, 2.) + pow(yc, 2.) - pow(yb, 2.) + pow(rb, 2.) - pow(rc, 2.)) / 2.0;
+                double T = (pow(xa, 2.) - pow(xb, 2.) + pow(ya, 2.) - pow(yb, 2.) + pow(rb, 2.) - pow(ra, 2.)) / 2.0;
+                double y = ((T * (xb - xc)) - (S * (xb - xa))) / (((ya - yb) * (xb - xc)) - ((yc - yb) * (xb - xa)));
+                double x = ((y * (ya - yb)) - T) / (xb - xa);
 
+                userLocation = new LatLng(y*10,x*10);
+                updateUserIconLocation();
             }
 
         }
