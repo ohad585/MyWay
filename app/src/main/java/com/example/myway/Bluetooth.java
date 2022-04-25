@@ -45,6 +45,7 @@ public class Bluetooth {
                     try {
                         devicesFoundLock.lock();
                         Log.d("TAG", "onLeScan: "+bluetoothDevice.getName());
+
                         devicesFound.put(addr,new BluetoothRep(bluetoothDevice,i));
                     }finally {
                         devicesFoundLock.unlock();
@@ -85,6 +86,8 @@ public class Bluetooth {
                 runScan();
             }
         },SCAN_INTERVAL);
+
+
     }
 
     private void scanLeDevice() {
