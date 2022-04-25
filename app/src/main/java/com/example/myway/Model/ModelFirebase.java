@@ -213,4 +213,13 @@ public class ModelFirebase {
                     Log.d("TAG", e.getMessage());
                 });
     }
+    public void getCurrentUser(Model.getCurrentUserListener listener) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        User usr=new User();
+        usr.setEmail(user.getEmail());
+        usr.setUid(user.getUid());
+        usr.setPhoneNum(user.getPhoneNumber());
+        usr.setUserName(user.getDisplayName());
+        listener.onComplete(usr);
+    }
 }

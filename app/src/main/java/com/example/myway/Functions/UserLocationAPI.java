@@ -90,7 +90,7 @@ public class UserLocationAPI {
                 //iBeacons size is 3 or more, we will only use 3 .
                 List<String> keys = (List<String>) iBeacons.keySet();
                 Log.d("TAG", "calcUserLocation: "+keys.toString());
-                float xa = (iBeacons.get(keys.get(0))).getDevice().ge
+                //float xa = (iBeacons.get(keys.get(0))).getDevice().
                 float ya = beacon1.locationY;
                 float xb = beacon2.locationX;
                 float yb = beacon2.locationY;

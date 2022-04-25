@@ -27,6 +27,7 @@ public class User {
         this.password="Classified";
         this.phoneNum=user.getPhoneNumber();;
         this.uid=user.getUid();
+        this.userName=user.getDisplayName();
 
     }
 

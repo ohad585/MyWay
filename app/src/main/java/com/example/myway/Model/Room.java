@@ -31,6 +31,7 @@ public class Room {
     private LatLng botLeft;
     private int fillColor = 0x7F00FF00;
     private String details;
+    private boolean isDeleted;
 
     public Room(){
     }
@@ -42,6 +43,7 @@ public class Room {
         botRight = points.get(2);
         botLeft = points.get(3);
         details = poly.getTag().toString();
+
     }
 
     public Room(LatLng tl,LatLng tr,LatLng br,LatLng bl,String det){
@@ -50,6 +52,7 @@ public class Room {
         botRight=br;
         botLeft=bl;
         details=det;
+        isDeleted=false;
     }
 
     public int getFillColor() {
@@ -125,5 +128,11 @@ public class Room {
     }
 
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
 
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 }

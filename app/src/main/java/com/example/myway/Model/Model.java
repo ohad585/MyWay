@@ -126,4 +126,11 @@ public class Model {
     public void saveIBeacon(IBeacon b , SaveIBeaconListener listener){
         modelFirebase.saveIBeacon(b,listener);
     }
+    public interface getCurrentUserListener {
+        void onComplete(User user);
+    }
+
+    public void getCurrentUser(getCurrentUserListener listener) {
+        modelFirebase.getCurrentUser(listener);
+    }
 }
