@@ -3,6 +3,8 @@ package com.example.myway;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,7 +39,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleMap.OnPolylineClickListener,
+        GoogleMap.OnPolygonClickListener {
     private BluetoothManager btManager;
     private BluetoothAdapter btAdapter;
     private Bluetooth bleInterface;
@@ -129,10 +133,12 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 onRoomsReady();
             }
         });
+        drawPath();
+        googleMap.setOnPolylineClickListener(this);
+        googleMap.setOnPolygonClickListener(this);
     }
 
     private void onRoomsReady() {
-
         bleInterface.runScan();
 
         // Display traffic.
@@ -149,8 +155,9 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 });
 
             }
+
         });
-        //drowPath();
+
 
 //        List<IBeacon> beacons = new LinkedList<>();
 //        beacons.add(new IBeacon("000","168",34.65844,31.80686));
@@ -176,8 +183,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    private void drowPath() {
-        for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 2; i++) {
+    private void drawPath() {
+        for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 1; i++) {
             drawPolylineBetween2Rooms(
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i + 1)));
@@ -185,11 +192,15 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void drawPolylineBetween2Rooms(RoomGraph.RoomRepresent roomA, RoomGraph.RoomRepresent roomB) {
-        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+        PolylineOptions rectOptions=new PolylineOptions()
                 .clickable(true)
                 .add(
                         new LatLng(roomA.getDoorX(), roomA.getDoorY()),
-                        new LatLng(roomB.getDoorX(), roomB.getDoorY())));
+                        new LatLng(roomB.getDoorX(), roomB.getDoorY()))
+                .width(20)
+                .color(Color.BLACK);
+        Polyline polyline = googleMap.addPolyline(rectOptions);
+        Log.d("drawPath","draw polyline between "+roomA.getRoom()+" and "+roomB.getRoom());
 
     }
 
@@ -209,4 +220,13 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     }
 
 
+    @Override
+    public void onPolygonClick(Polygon polygon) {
+
+    }
+
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+
+    }
 }

@@ -115,7 +115,7 @@ public class NavAlg  {
 
             text+=" Nr.Hops:"+(stack.size()-1)+" Path length: "+String.format( "%.2f", path_length )+ "ns";
         }//fund else per ekzistencen e path
-        Log.d("TAGLiron",""+pathString);
+        Log.d("TAG",""+pathString);
         return text+"\n"+text2;
     }
 
