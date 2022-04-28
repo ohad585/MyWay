@@ -36,6 +36,7 @@ public class log_in_fragment extends Fragment {
 
                 uName=userName.toString();
                 uPass=userPass.toString();
+                loginUser();
 
             }
         });
@@ -45,6 +46,7 @@ public class log_in_fragment extends Fragment {
     public void loginUser(){
         Model.instance.signInWithEmailPass(uName,uPass,(User user, boolean success)->{
             if(success){
+
                 Log.d("TAG", "loginUser: "+user.getUserName()+" "+user.getUid());
             }
             else {

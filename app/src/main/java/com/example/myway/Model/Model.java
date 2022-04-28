@@ -47,6 +47,13 @@ public class Model {
 
     }
 
+    public interface GetAllMapsListener{
+        void onComplete(List<MyWayMap> maps);
+    }
+    public void getAllMaps(GetAllMapsListener listener) {
+        listener.onComplete(null);
+    }
+
     public interface getBluetoothDevicesListener{
         void onComplete(List<String> devices);
     }

@@ -47,6 +47,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
+    private final int CAMERA_ZOOM = 22;
 
     GoogleMap googleMap;
     TextView instructionTV;
@@ -67,13 +68,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 userLocationAPI.init();
             }
         });
-        btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        btAdapter = btManager.getAdapter();
-        bleInterface = new Bluetooth(btAdapter);
-        if (btAdapter != null && !btAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            //startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        }
+
 
         checkPermissions();
     }
@@ -81,12 +76,20 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     private void checkPermissions(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || this.checkSelfPermission(Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.FOREGROUND_SERVICE}, PERMISSION_REQUEST);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.FOREGROUND_SERVICE,Manifest.permission.BLUETOOTH_CONNECT}, PERMISSION_REQUEST);
             }else setup();
         }
     }
 
+
     private void setup() {
+        btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        btAdapter = btManager.getAdapter();
+        if ((btAdapter != null && !btAdapter.isEnabled())) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+        bleInterface = new Bluetooth(btAdapter);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -111,7 +114,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         googleMap.addMarker(new MarkerOptions().position(samiShamoon).title("Sami"));
         // Move the camera to the map coordinates and zoom in closer.
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(samiShamoon));
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(22));
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(CAMERA_ZOOM));
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
@@ -130,6 +133,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             }
         });
     }
+
+
 
     private void onRoomsReady() {
 
