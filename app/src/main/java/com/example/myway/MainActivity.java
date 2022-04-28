@@ -2,6 +2,7 @@ package com.example.myway;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -15,9 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.myway.Model.NavAlg;
+import com.example.myway.Model.RoomGraph;
+
 public class MainActivity extends AppCompatActivity {
     NavController navCtrl;
     androidx.appcompat.widget.SearchView editsearch;
+    String searchString;
+    RoomGraph g = new RoomGraph();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            if (query == "y") {
-                Log.d("TAG", "YYY");
-            }
+
             //use the query to search your data somehow
         }
     }
@@ -66,7 +70,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("TAGLIRON", " " + query);
+                searchString=query;
+                RoomGraph.RoomRepresent currentLocation=g.getRoomByName("167"); //change to current location
+                RoomGraph.RoomRepresent destination=g.getRoomByName(query);
+                if (destination==null){
+                    showDialogRoomDoesntFound();
+                }
+                else{
+                    Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(currentLocation,destination));
+                    Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+                    Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
+                }
                 return true;
             }
         };
@@ -74,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -97,5 +112,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         return true;
+    }
+
+
+    private void showDialogRoomDoesntFound() {
+        DialogFragment newFragment = new DialogRoomNotFound();
+        newFragment.show(getSupportFragmentManager(), "RoomNotFound");
     }
 }

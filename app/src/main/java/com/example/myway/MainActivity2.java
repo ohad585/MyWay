@@ -55,11 +55,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     private Bluetooth bleInterface;
     private UserLocationAPI userLocationAPI;
     private Resources appRes;
-    private final int ICON_SIZE = 85;
-
-
-
-
+    private final int ICON_SIZE = 90;
     private Button checkloc_btn;
 
     private final static int REQUEST_ENABLE_BT = 1;
@@ -108,9 +104,9 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         g = new RoomGraph();
-        Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("167"), g.getRoomByName("cafeteria")));
-        Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
-        Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
+     Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("167"), g.getRoomByName("cafeteria")));
+//        Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+//        Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
 
         instructionTV = findViewById(R.id.instruction_mainactivity);
         instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
@@ -157,10 +153,10 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 .icon(markerIcon)
                 .anchor(0, 0)
         );
-        circleDrawable = getResources().getDrawable(R.drawable.synagogue_icon);
+        circleDrawable = getResources().getDrawable(R.drawable.magen_david_icon);
         markerIcon = getMarkerIconFromDrawable(circleDrawable);
         Marker synagogueMarker = googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(31.80713, 34.65803))
+                .position(new LatLng(31.80713, 34.65805))
                 .title("synagogue")
                 .icon(markerIcon)
                 .anchor(0, 0)
@@ -336,7 +332,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         canvas.setBitmap(bitmap);
-
         drawable.setBounds(0, 0, ICON_SIZE, ICON_SIZE);
         drawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
