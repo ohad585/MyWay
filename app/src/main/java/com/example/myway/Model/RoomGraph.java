@@ -123,7 +123,20 @@ public class RoomGraph {
         roomList.add(new RoomRepresent(34.65783,31.80729,"160"));
         roomList.add(new RoomRepresent(34.65828,31.80693,"J1"));
         roomList.add(new RoomRepresent( 34.65836,31.80704,"J2"));
+        roomList.add(new RoomRepresent(31.80713, 34.65803,"synagogue"));
+        roomList.add(new RoomRepresent(31.80719, 34.65808,"cafeteria"));
 
+        edges.add(new Edge("166B","synagogue","Go left"));
+        edges.add(new Edge("synagogue","166B","Go right"));
+
+        edges.add(new Edge("163","synagogue","Go right"));
+        edges.add(new Edge("synagogue","163","Go left"));
+
+        edges.add(new Edge("165","cafeteria","Go straight"));
+        edges.add(new Edge("cafeteria","165","Go straight"));
+
+        edges.add(new Edge("164","cafeteria","Go right"));
+        edges.add(new Edge("cafeteria","164","Go left"));
 
         edges.add(new Edge("168","167","Go straight"));
         edges.add(new Edge("167","168","Go straight"));

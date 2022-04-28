@@ -4,7 +4,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,12 +33,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,6 +54,11 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     private BluetoothAdapter btAdapter;
     private Bluetooth bleInterface;
     private UserLocationAPI userLocationAPI;
+    private Resources appRes;
+    private final int ICON_SIZE = 85;
+
+
+
 
     private Button checkloc_btn;
 
@@ -95,8 +108,10 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         g = new RoomGraph();
-        Log.d("TAG123", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("168"), g.getRoomByName("J2")));
-        //Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+        Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("167"), g.getRoomByName("cafeteria")));
+        Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+        Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
+
         instructionTV = findViewById(R.id.instruction_mainactivity);
         instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
     }
@@ -134,8 +149,94 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             }
         });
         drawPath();
-        googleMap.setOnPolylineClickListener(this);
-        googleMap.setOnPolygonClickListener(this);
+        Drawable circleDrawable = getResources().getDrawable(R.drawable.stairs);
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker stairsMarker = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80722, 34.65782))
+                .title("stairs")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.synagogue_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker synagogueMarker = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80713, 34.65803))
+                .title("synagogue")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.cafeteria_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker cafeteria = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80719, 34.65808))
+                .title("cafeteria")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.garbage_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker garbage = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80716, 34.65799))
+                .title("garbage")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench1 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80704, 34.65821))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench2 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80709, 34.65823))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench3 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80705, 34.6581))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench4 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.8069, 34.65847))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench5 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80705, 34.6581))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench6 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80705, 34.6581))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
+        circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+        markerIcon = getMarkerIconFromDrawable(circleDrawable);
+        Marker bench7 = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(31.80722, 34.65797))
+                .title("bench")
+                .icon(markerIcon)
+                .anchor(0, 0)
+        );
     }
 
     private void onRoomsReady() {
@@ -184,6 +285,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void drawPath() {
+
         for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 1; i++) {
             drawPolylineBetween2Rooms(
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
@@ -195,8 +297,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         PolylineOptions rectOptions=new PolylineOptions()
                 .clickable(true)
                 .add(
-                        new LatLng(roomA.getDoorX(), roomA.getDoorY()),
-                        new LatLng(roomB.getDoorX(), roomB.getDoorY()))
+                        new LatLng( roomA.getDoorY(),roomA.getDoorX()),
+                        new LatLng( roomB.getDoorY(),roomB.getDoorX()))
                 .width(20)
                 .color(Color.BLACK);
         Polyline polyline = googleMap.addPolyline(rectOptions);
@@ -228,5 +330,15 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onPolylineClick(Polyline polyline) {
 
+    }
+
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+
+        drawable.setBounds(0, 0, ICON_SIZE, ICON_SIZE);
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }
