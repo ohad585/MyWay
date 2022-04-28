@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_page_fragment">
+    app:startDestination="@id/mapSelectFragment">
     <fragment
         android:id="@+id/home_page_fragment"
         android:name="com.example.myway.home_page_fragment"
@@ -47,4 +47,22 @@
         android:name="com.example.myway.favorite_place_fragment"
         android:label="favorite_place_fragment"
         tools:layout="@layout/favorite_place_fragment" />
+    <fragment
+        android:id="@+id/mapSelectFragment"
+        android:name="com.example.myway.MapSelectFragment"
+        android:label="fragment_map_select"
+        tools:layout="@layout/fragment_map_select" >
+        <action
+            android:id="@+id/action_mapSelectFragment_to_mainActivity2"
+            app:destination="@id/mainActivity2" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity2"
+        android:name="com.example.myway.MainActivity2"
+        android:label="activity_main2"
+        tools:layout="@layout/activity_main2" >
+        <argument
+            android:name="myMapName"
+            app:argType="string" />
+    </activity>
 </navigation>

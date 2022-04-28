@@ -20,6 +20,7 @@ import android.util.Log;
 import com.example.myway.Model.IBeacon;
 import com.example.myway.Functions.UserLocationAPI;
 import com.example.myway.Model.Model;
+import com.example.myway.Model.MyWayMap;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
 import com.example.myway.Model.RoomGraph;
@@ -47,11 +48,12 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
-    private final int CAMERA_ZOOM = 22;
+    private final int CAMERA_ZOOM = 19;
 
-    GoogleMap googleMap;
-    TextView instructionTV;
-    RoomGraph g;
+    private GoogleMap googleMap;
+    private TextView instructionTV;
+    private RoomGraph g;
+    private MyWayMap myMap;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -60,7 +62,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         //RoomGraph g = new RoomGraph();
-        //Log.d("TAG123", "onCreate: "+NavAlg.instance.Dijkstra(g.getRoomByName("168"),g.getRoomByName("J2")));
         checkloc_btn = findViewById(R.id.checkloc_btn);
         checkloc_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,21 +69,27 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 userLocationAPI.init();
             }
         });
-
-
-        checkPermissions();
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("myMapName");
+        Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
+            @Override
+            public void onComplete(MyWayMap map) {
+                myMap = map;
+                checkPermissions();
+            }
+        });
     }
 
     private void checkPermissions(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || this.checkSelfPermission(Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH_ADMIN,Manifest.permission.FOREGROUND_SERVICE,Manifest.permission.BLUETOOTH_CONNECT}, PERMISSION_REQUEST);
-            }else setup();
+            }else setupBluetooth();
         }
     }
 
+    private void setupBluetooth() {
 
-    private void setup() {
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
         if ((btAdapter != null && !btAdapter.isEnabled())) {
@@ -90,12 +97,16 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
         bleInterface = new Bluetooth(btAdapter);
+        setup();
+    }
+
+
+    private void setup() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         g = new RoomGraph();
         Log.d("TAG123", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("168"), g.getRoomByName("J2")));
-        //Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
         instructionTV = findViewById(R.id.instruction_mainactivity);
         instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
     }
@@ -103,23 +114,15 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap1) {
-        GoogleMap.OnPolygonClickListener listener = null;
         googleMap=googleMap1;
         List<Polygon> polygonList=new LinkedList<>();
-        // Set the map coordinates to Sami shamoon ashdod.
-        LatLng samiShamoon = new LatLng(31.80687, 34.65846);
-        // Set the map type to Normal.
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        // Add a marker on the map coordinates.
-        googleMap.addMarker(new MarkerOptions().position(samiShamoon).title("Sami"));
-        // Move the camera to the map coordinates and zoom in closer.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(samiShamoon));
+        googleMap.addMarker(new MarkerOptions().position(myMap.getLatLng()).title(myMap.getName()));
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(CAMERA_ZOOM));
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
                 for(Room r:roomList){
-                    //Log.d("TAG112", "onMapReady: "+r.getDetails());
                     Polygon p = googleMap.addPolygon(r.retPolygonOptions());
                     p.setClickable(true);
                     p.setTag(r.getDetails());
@@ -141,7 +144,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         bleInterface.runScan();
 
         // Display traffic.
-        googleMap.setTrafficEnabled(true);
+        //googleMap.setTrafficEnabled(true);
         googleMap.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             public void onPolygonClick(Polygon polygon) {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target, googleMap.getCameraPosition().zoom));
@@ -178,7 +181,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //            });
 //        }
         userLocationAPI = new UserLocationAPI(googleMap,bleInterface,getResources());
-
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myMap.getLatLng()));
     }
 
     private void drowPath() {
@@ -206,7 +209,7 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
         }
         switch (requestCode) {
             case PERMISSION_REQUEST:
-                setup();
+                setupBluetooth();
                 return;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);

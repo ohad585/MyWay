@@ -46,12 +46,18 @@ public class Model {
         return null;
 
     }
+    public interface GetMapByNameListener{
+        void onComplete(MyWayMap map);
+    }
+    public void getMapByName(String name , GetMapByNameListener listener) {
+        modelFirebase.getMapByName(name,listener);
+    }
 
     public interface GetAllMapsListener{
         void onComplete(List<MyWayMap> maps);
     }
     public void getAllMaps(GetAllMapsListener listener) {
-        listener.onComplete(null);
+        modelFirebase.getAllMaps(listener);
     }
 
     public interface getBluetoothDevicesListener{
