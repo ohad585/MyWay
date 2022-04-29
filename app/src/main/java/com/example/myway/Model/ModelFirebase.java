@@ -88,7 +88,12 @@ public class ModelFirebase {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    listener.onComplete();
+                    signInWithEmail(email, password, new Model.SignInWithEmailPassListener() {
+                        @Override
+                        public void onComplete(User user, boolean success) {
+                            listener.onComplete();
+                        }
+                    });
                     Log.d("Tag", "success");
                 } else {
                     Log.d("Tag", "not success", task.getException());
@@ -221,5 +226,59 @@ public class ModelFirebase {
         usr.setPhoneNum(user.getPhoneNumber());
         usr.setUserName(user.getDisplayName());
         listener.onComplete(usr);
+    }
+
+    public void getAllMaps(Model.GetAllMapsListener listener) {
+        db.collection("Maps")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<MyWayMap> maps = new LinkedList<MyWayMap>();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        MyWayMap m = MyWayMap.fromJson(doc.getData());
+                        if (m != null) {
+                            maps.add(m);
+                        }
+                    }
+                } else {
+
+                }
+                listener.onComplete(maps);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
+    }
+
+    public void getMapByName(String name, Model.GetMapByNameListener listener) {
+        db.collection("Maps")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        MyWayMap m = MyWayMap.fromJson(doc.getData());
+                        if (m != null) {
+                            if(m.getName().matches(name)){
+                                 listener.onComplete(m);
+                                 return;
+                            }
+                        }
+                    }
+                    listener.onComplete(null);
+                } else {
+
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
     }
 }

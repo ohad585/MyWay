@@ -22,9 +22,8 @@
         android:label="Registration"
         tools:layout="@layout/registraition_fragment" >
         <action
-            android:id="@+id/action_regrister_fragment_to_home_page_fragment"
-            app:destination="@id/home_page_fragment"
-            app:popUpTo="@id/home_page_fragment" />
+            android:id="@+id/action_regrister_fragment_to_mapSelectFragment"
+            app:destination="@id/mapSelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/log_in_fragment"
@@ -32,9 +31,8 @@
         android:label="LOG IN"
         tools:layout="@layout/log_in_fragment" >
         <action
-            android:id="@+id/action_log_in_fragment_to_home_page_fragment"
-            app:destination="@id/home_page_fragment"
-            app:popUpTo="@id/home_page_fragment" />
+            android:id="@+id/action_log_in_fragment_to_mapSelectFragment"
+            app:destination="@id/mapSelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/personal_page_fragment"
@@ -47,4 +45,22 @@
         android:name="com.example.myway.favorite_place_fragment"
         android:label="favorite_place_fragment"
         tools:layout="@layout/favorite_place_fragment" />
+    <fragment
+        android:id="@+id/mapSelectFragment"
+        android:name="com.example.myway.MapSelectFragment"
+        android:label="fragment_map_select"
+        tools:layout="@layout/fragment_map_select" >
+        <action
+            android:id="@+id/action_mapSelectFragment_to_mainActivity2"
+            app:destination="@id/mainActivity2" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity2"
+        android:name="com.example.myway.MainActivity2"
+        android:label="activity_main2"
+        tools:layout="@layout/activity_main2" >
+        <argument
+            android:name="myMapName"
+            app:argType="string" />
+    </activity>
 </navigation>
