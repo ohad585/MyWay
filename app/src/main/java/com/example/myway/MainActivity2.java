@@ -55,7 +55,6 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
     private BluetoothAdapter btAdapter;
     private Bluetooth bleInterface;
     private UserLocationAPI userLocationAPI;
-    private Resources appRes;
     private final int ICON_SIZE = 90;
     private Button checkloc_btn;
 
@@ -149,10 +148,13 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
 //                                    .title(r.getDetails()));
                     polygonList.add(p);
                 }
-                onRoomsReady();
+            drawExtraMarkers();
             }
         });
         drawPath();
+
+    }
+    private void drawExtraMarkers(){
         Drawable circleDrawable = getResources().getDrawable(R.drawable.stairs);
         BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
         Marker stairsMarker = googleMap.addMarker(new MarkerOptions()
@@ -241,8 +243,8 @@ public class MainActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 .icon(markerIcon)
                 .anchor(0, 0)
         );
+        onRoomsReady();
     }
-
 
 
     private void onRoomsReady() {
