@@ -88,7 +88,12 @@ public class ModelFirebase {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    listener.onComplete();
+                    signInWithEmail(email, password, new Model.SignInWithEmailPassListener() {
+                        @Override
+                        public void onComplete(User user, boolean success) {
+                            listener.onComplete();
+                        }
+                    });
                     Log.d("Tag", "success");
                 } else {
                     Log.d("Tag", "not success", task.getException());

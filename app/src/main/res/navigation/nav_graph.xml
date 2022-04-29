@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mapSelectFragment">
+    app:startDestination="@id/home_page_fragment">
     <fragment
         android:id="@+id/home_page_fragment"
         android:name="com.example.myway.home_page_fragment"
@@ -22,9 +22,8 @@
         android:label="Registration"
         tools:layout="@layout/registraition_fragment" >
         <action
-            android:id="@+id/action_regrister_fragment_to_home_page_fragment"
-            app:destination="@id/home_page_fragment"
-            app:popUpTo="@id/home_page_fragment" />
+            android:id="@+id/action_regrister_fragment_to_mapSelectFragment"
+            app:destination="@id/mapSelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/log_in_fragment"
@@ -32,9 +31,8 @@
         android:label="LOG IN"
         tools:layout="@layout/log_in_fragment" >
         <action
-            android:id="@+id/action_log_in_fragment_to_home_page_fragment"
-            app:destination="@id/home_page_fragment"
-            app:popUpTo="@id/home_page_fragment" />
+            android:id="@+id/action_log_in_fragment_to_mapSelectFragment"
+            app:destination="@id/mapSelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/personal_page_fragment"

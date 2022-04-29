@@ -17,6 +17,8 @@ import com.example.myway.Model.Model;
 import com.example.myway.Model.User;
 
 public class log_in_fragment extends Fragment {
+    View view;
+
     TextView userName;
     TextView userPass;
     String uName;
@@ -26,7 +28,7 @@ public class log_in_fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.log_in_fragment, container, false);
+        view= inflater.inflate(R.layout.log_in_fragment, container, false);
         Button loginBtn=view.findViewById(R.id.log_in_log_in_btn);
         userName=view.findViewById(R.id.log_in_name_et);
         userPass=view.findViewById(R.id.log_in_password_et);
@@ -46,8 +48,7 @@ public class log_in_fragment extends Fragment {
     public void loginUser(){
         Model.instance.signInWithEmailPass(uName,uPass,(User user, boolean success)->{
             if(success){
-
-                Log.d("TAG", "loginUser: "+user.getUserName()+" "+user.getUid());
+                Navigation.findNavController(view).navigate(R.id.action_log_in_fragment_to_mapSelectFragment);
             }
             else {
                 Log.d("TAG", "loginUser: Failed");
