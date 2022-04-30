@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph2"
+    app:startDestination="@id/mapFragment">
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.myway.MapsFragment"
+        android:label="Map Fragment"
+        tools:layout="@layout/fragment_maps" >
+        <argument
+            android:name="myMapName"
+            app:argType="string" />
+    </fragment>
+</navigation>

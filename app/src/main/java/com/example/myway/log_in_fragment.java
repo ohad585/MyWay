@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.os.TestLooperManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +35,8 @@ public class log_in_fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                uName=userName.toString();
-                uPass=userPass.toString();
+                uName=userName.getText().toString();
+                uPass=userPass.getText().toString();
                 loginUser();
 
             }

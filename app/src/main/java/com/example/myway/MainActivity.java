@@ -29,12 +29,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        handleIntent(getIntent());
         NavHostFragment nav_host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.base_navhost);
         navCtrl = nav_host.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navCtrl);
         editsearch = (SearchView) findViewById(R.id.menu_app_bar_search);
-
+        handleIntent(getIntent());
     }
 
 
