@@ -9,7 +9,7 @@ import com.example.myway.Model.Room;
 import java.util.List;
 
 public class allFavoritePlacesViewModel  extends ViewModel {
-        LiveData<List<Room>> data = Model.instance.getAllFavoritePlaces();
+        LiveData<List<Room>> data = Model.instance.getAllFavPlacesForUser();
         public LiveData<List<Room>> getData() {
             return data;
         }
