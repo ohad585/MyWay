@@ -69,9 +69,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         if (getArguments() != null) {
             name = getArguments().getString("myMapName");
         }
-        if(name == null){
-            name = "Sami Shamoon College of engineering ";
-        }
         Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
             @Override
             public void onComplete(MyWayMap map) {

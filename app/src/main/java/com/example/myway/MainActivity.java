@@ -21,9 +21,6 @@ import com.example.myway.Model.RoomGraph;
 
 public class MainActivity extends AppCompatActivity {
     NavController navCtrl;
-    androidx.appcompat.widget.SearchView editsearch;
-    String searchString;
-    RoomGraph g = new RoomGraph();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

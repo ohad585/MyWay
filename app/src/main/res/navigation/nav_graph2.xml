@@ -31,5 +31,5 @@
         android:name="com.example.myway.placesHistory"
         android:label="History Page"
         tools:layout="@layout/places_history_fragment" >
-    </fragment><action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/><action android:id="@+id/action_global_favorite_places_fragment" app:destination="@id/favorite_places_fragment"/><action android:id="@+id/action_global_places_history_fragment" app:destination="@id/places_history_fragment"/>
+    </fragment><action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/><action android:id="@+id/action_global_favorite_places_fragment" app:destination="@id/favorite_places_fragment"/><action android:id="@+id/action_global_places_history_fragment" app:destination="@id/places_history_fragment"/><action android:id="@+id/action_global_mapFragment" app:destination="@id/mapFragment"/>
 </navigation>

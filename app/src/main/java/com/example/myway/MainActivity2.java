@@ -8,21 +8,12 @@ import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -30,32 +21,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import com.example.myway.Model.IBeacon;
 import com.example.myway.Functions.UserLocationAPI;
-import com.example.myway.Model.Model;
-import com.example.myway.Model.MyWayMap;
 import com.example.myway.Model.NavAlg;
-import com.example.myway.Model.Room;
 import com.example.myway.Model.RoomGraph;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 
 public class MainActivity2 extends AppCompatActivity {
     private BluetoothManager btManager;
@@ -69,9 +38,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
-    private final int CAMERA_ZOOM = 19;
 
-    private GoogleMap googleMap;
     private RoomGraph g;
 
 
@@ -83,16 +50,16 @@ public class MainActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
 
         NavHostFragment nav_host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.base_navhost2);
-        navCtrl = nav_host.getNavController();
-        NavigationUI.setupActionBarWithNavController(this, navCtrl);
-        editsearch = (SearchView) findViewById(R.id.menu_app_bar_search);
-        handleIntent(getIntent());
+
         Intent intent = getIntent();
         String name = intent.getStringExtra("myMapName");
         Bundle bundle = new Bundle();
         bundle.putString("myMapName", name );
-        MapsFragment fragInfo = new MapsFragment();
-        fragInfo.setArguments(bundle);
+        navCtrl = nav_host.getNavController();
+        navCtrl.setGraph(R.navigation.nav_graph2,bundle);
+        NavigationUI.setupActionBarWithNavController(this, navCtrl);
+        editsearch = (SearchView) findViewById(R.id.menu_app_bar_search);
+        handleIntent(getIntent());
         g = new RoomGraph();
         checkPermissions();
     }
@@ -117,6 +84,8 @@ public class MainActivity2 extends AppCompatActivity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
         bleInterface = new Bluetooth(btAdapter);
+
+
     }
 
 
