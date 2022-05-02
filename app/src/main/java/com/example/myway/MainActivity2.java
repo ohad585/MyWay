@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class MainActivity2 extends AppCompatActivity {
 
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,9 @@ public class MainActivity2 extends AppCompatActivity {
         editsearch = (SearchView) findViewById(R.id.menu_app_bar_search);
         handleIntent(getIntent());
         g = new RoomGraph();
+
+
+
         checkPermissions();
     }
 

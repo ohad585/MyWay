@@ -77,7 +77,7 @@ public class regrister_fragment extends Fragment {
             alertDialog.show();
         }
         else {
-            User user = new User(name, pass, phone, mail);
+            User user = new User(name, pass, phone, mail,true);
 
             Model.instance.addUser(user, (boolean flag) -> {
                 Log.d("TAG", Boolean.toString(flag));

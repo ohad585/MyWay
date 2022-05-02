@@ -11,15 +11,17 @@ public class User {
     private String phoneNum;
     private String email;
     private String uid;
+    private boolean blind;
 
     public User() {}
 
-    public User(String n,String p, String phone,String e) {
+    public User(String n,String p, String phone,String e,boolean b) {
         userName=n;
         password=p;
         phoneNum=phone;
         email=e;
         uid="";
+        blind = b;
     }
 
     public User(FirebaseUser user) {
@@ -49,6 +51,10 @@ public class User {
 
     public String getUid() { return uid; }
 
+    public boolean isBlind() {
+        return blind;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -67,12 +73,18 @@ public class User {
 
     public void setUid(String uid) { this.uid = uid; }
 
+    public void setBlind(boolean blind) {
+        this.blind = blind;
+    }
+
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
         json.put("userName", getUserName());
         json.put("password", getPassword());
         json.put("phone", getPhoneNum());
         json.put("email", getEmail());
+        json.put("blind", isBlind());
+
         return json;
     }
 
@@ -84,7 +96,9 @@ public class User {
         String password = (String)json.get("password");
         String phone = (String)json.get("phone");
         String email = (String)json.get("email");
-        User user = new User(userName,password,phone,email);
+        boolean blind = (boolean)json.get("blind");
+
+        User user = new User(userName,password,phone,email,blind);
         return user;
     }
 

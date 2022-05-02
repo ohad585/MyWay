@@ -1,32 +1,34 @@
 package com.example.myway;
 
+import static android.app.Activity.RESULT_OK;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.myway.Functions.UserLocationAPI;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.MyWayMap;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
 import com.example.myway.Model.RoomGraph;
+import com.example.myway.Model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,22 +42,29 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnPolylineClickListener,
         GoogleMap.OnPolygonClickListener {
     private View view;
     private final int ICON_SIZE = 90;
-
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1;
     private final int CAMERA_ZOOM = 19;
 
+    private Button micBtn;
     private GoogleMap googleMap;
     private TextView instructionTV;
     private RoomGraph g;
     private MyWayMap myMap;
     private String name = null;
+    private TextToSpeech textToSpeech;
+    private User myUser;
+    View mapView;
 
 
     @Nullable
@@ -65,19 +74,82 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        mapView = view.findViewById(R.id.map);
+        textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            }
+        });
 
         if (getArguments() != null) {
             name = getArguments().getString("myMapName");
         }
-        Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
+
+        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
             @Override
-            public void onComplete(MyWayMap map) {
-                myMap = map;
-                setup();
+            public void onComplete(User user) {
+                myUser = user;
+                preSetup();
+            }
+        });
+
+        micBtn = view.findViewById(R.id.maps_mic_btn);
+        micBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(0).toString(),TextToSpeech.QUEUE_FLUSH,null);
             }
         });
 
         return view;
+    }
+
+    private void preSetup() {
+        if(myUser.isBlind()){
+            //User Is Blind
+            instructionTV.setVisibility(View.INVISIBLE);
+                mapView.setVisibility(View.INVISIBLE);
+                mapView.setClickable(false);
+                micBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent intent
+                            = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                            Locale.getDefault());
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                    try {
+                        startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+                    }
+                    catch (Exception e) {
+                        Toast.makeText(getContext(), " " + e.getMessage(),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }
+            });
+        }else {
+            //User can see
+            micBtn.setClickable(false);
+            micBtn.setVisibility(View.INVISIBLE);
+            Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
+                @Override
+                public void onComplete(MyWayMap map) {
+                    myMap = map;
+                    setup();
+                }
+            });
+        }
     }
 
     private void setup() {
@@ -302,6 +374,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         drawable.setBounds(0, 0, ICON_SIZE, ICON_SIZE);
         drawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                    @Nullable Intent data)
+    {
+        Log.d("TAGO", "onActivityResult: ++++++++++++++++++");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(
+                        RecognizerIntent.EXTRA_RESULTS);
+                Log.d("TAG", "onActivityResult: "+Objects.requireNonNull(result).get(0));
+            }
+        }
     }
 
 }

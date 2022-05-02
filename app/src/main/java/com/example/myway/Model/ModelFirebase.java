@@ -30,7 +30,7 @@ public class ModelFirebase {
 
     public void addUser(User user, Model.AddUserListener listener) {
         db.collection("users")
-                .document(user.getUserName()).set(user.toJson())
+                .document(user.getEmail()).set(user.toJson())
                 .addOnSuccessListener((successListener) -> {
                     listener.onComplete(true);
                 })
@@ -221,14 +221,19 @@ public class ModelFirebase {
                     Log.d("TAG", e.getMessage());
                 });
     }
-    public void getCurrentUser(Model.getCurrentUserListener listener) {
+    public void getCurrentUser(Model.getCurrentUserListener listener1) {
         FirebaseUser user = mAuth.getCurrentUser();
         User usr=new User();
         usr.setEmail(user.getEmail());
         usr.setUid(user.getUid());
         usr.setPhoneNum(user.getPhoneNumber());
         usr.setUserName(user.getDisplayName());
-        listener.onComplete(usr);
+        getUserByUserName(usr.getEmail(), new Model.GetUserByUserNameListener() {
+            @Override
+            public void onComplete(User u) {
+                listener1.onComplete(u);
+            }
+        });
     }
 
     public void getAllMaps(Model.GetAllMapsListener listener) {
