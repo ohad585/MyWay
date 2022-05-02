@@ -93,7 +93,7 @@ public class MainActivity2 extends AppCompatActivity {
         bundle.putString("myMapName", name );
         MapsFragment fragInfo = new MapsFragment();
         fragInfo.setArguments(bundle);
-
+        g = new RoomGraph();
         checkPermissions();
     }
 
