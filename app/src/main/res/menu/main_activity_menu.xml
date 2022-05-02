@@ -4,8 +4,12 @@
     <item
         android:id="@+id/profile"
         android:title="Profile" />
-    <item android:title="favorite locations" />
-    <item android:title="Places history" />
+    <item
+        android:id="@+id/menubar_favorites"
+        android:title="favorite locations" />
+    <item
+        android:id="@+id/menubar_history"
+        android:title="Places history" />
     <item
         android:id="@+id/menu_app_bar_search"
         android:icon="@android:drawable/ic_menu_search"

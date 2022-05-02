@@ -34,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navCtrl);
     }
 
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                navCtrl.navigateUp();
+                return true;
+        }
+        return true;
+    }
+
 
 
 }

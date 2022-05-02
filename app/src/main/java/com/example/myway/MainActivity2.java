@@ -195,8 +195,15 @@ public class MainActivity2 extends AppCompatActivity {
                 return true;
             case R.id.profile:
                 navCtrl.navigate(R.id.action_global_personal_page_fragment);
-
                 return true;
+            case R.id.menubar_favorites:
+                navCtrl.navigate(R.id.action_global_favorite_places_fragment);
+                return true;
+
+            case R.id.menubar_history:
+                navCtrl.navigate(R.id.action_global_places_history_fragment);
+                return true;
+
             case R.id.menu_app_bar_search:
                 Log.d("TAGLIRON","KKK");
                 SearchManager searchManager =
