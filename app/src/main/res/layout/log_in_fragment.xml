@@ -25,10 +25,12 @@
         android:fontFamily="@font/anton"
         android:text="User name"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.074"
+        app:layout_constraintHorizontal_bias="0.087"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/log_in_logo" />
+        app:layout_constraintTop_toBottomOf="@+id/log_in_logo"
+        app:layout_constraintVertical_bias="0.033" />
 
     <TextView
         android:id="@+id/log_in_password_tv"
@@ -44,32 +46,6 @@
         app:layout_constraintTop_toBottomOf="@+id/log_in_name_tv"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/log_in_name_et"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:fontFamily="@font/anton"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/log_in_name_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toEndOf="@+id/log_in_name_tv" />
-
-    <EditText
-        android:id="@+id/log_in_password_et"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:fontFamily="@font/anton"
-        android:inputType="textPassword"
-        android:textSize="16sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/log_in_password_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.42"
-        app:layout_constraintStart_toEndOf="@+id/log_in_password_tv" />
-
     <Button
         android:id="@+id/log_in_log_in_btn"
         android:layout_width="wrap_content"
@@ -81,9 +57,38 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.467"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_in_password_et"
-        app:layout_constraintVertical_bias="0.297" />
+        app:layout_constraintVertical_bias="0.277" />
+
+    <EditText
+        android:id="@+id/log_in_name_et"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:height="48dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="@+id/log_in_name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/log_in_name_tv"
+        app:layout_constraintTop_toTopOf="@+id/log_in_name_tv"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/log_in_password_et"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="@+id/log_in_password_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/log_in_password_tv"
+        app:layout_constraintTop_toTopOf="@+id/log_in_password_tv"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

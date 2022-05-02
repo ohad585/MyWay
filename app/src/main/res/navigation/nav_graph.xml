@@ -35,17 +35,6 @@
             app:destination="@id/mapSelectFragment" />
     </fragment>
     <fragment
-        android:id="@+id/personal_page_fragment"
-        android:name="com.example.myway.personal_page_fragment"
-        android:label="fragment_personal_page_fragment"
-        tools:layout="@layout/personal_page_fragment" />
-    <action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/>
-    <fragment
-        android:id="@+id/favorite_place_fragment"
-        android:name="com.example.myway.favoritePlace"
-        android:label="favorite_place_fragment"
-        tools:layout="@layout/favorite_place_fragment" />
-    <fragment
         android:id="@+id/mapSelectFragment"
         android:name="com.example.myway.MapSelectFragment"
         android:label="fragment_map_select"

@@ -13,4 +13,23 @@
             android:name="myMapName"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/personal_page_fragment"
+        android:name="com.example.myway.personal_page_fragment"
+        android:label="Personal Page"
+        tools:layout="@layout/personal_page_fragment" >
+    </fragment>
+    <fragment
+        android:id="@+id/favorite_places_fragment"
+        android:name="com.example.myway.favoritePlace"
+        android:label="Favorites Page"
+        tools:layout="@layout/favorite_place_fragment" >
+    </fragment>
+    <fragment
+        android:id="@+id/places_history_fragment"
+        android:name="com.example.myway.placesHistory"
+        android:label="History Page"
+        tools:layout="@layout/places_history_fragment" >
+    </fragment><action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/><action android:id="@+id/action_global_favorite_places_fragment" app:destination="@id/favorite_places_fragment"/><action android:id="@+id/action_global_places_history_fragment" app:destination="@id/places_history_fragment"/><action android:id="@+id/action_global_mapFragment" app:destination="@id/mapFragment"/>
 </navigation>

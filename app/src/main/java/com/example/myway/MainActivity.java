@@ -21,9 +21,6 @@ import com.example.myway.Model.RoomGraph;
 
 public class MainActivity extends AppCompatActivity {
     NavController navCtrl;
-    androidx.appcompat.widget.SearchView editsearch;
-    String searchString;
-    RoomGraph g = new RoomGraph();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +29,15 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment nav_host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.base_navhost);
         navCtrl = nav_host.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navCtrl);
+    }
+
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                navCtrl.navigateUp();
+                return true;
+        }
+        return true;
     }
 
 
