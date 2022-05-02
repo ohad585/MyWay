@@ -1,6 +1,5 @@
 package com.example.myway.Model;
 
-import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -16,8 +15,22 @@ public class Model {
     public static final Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Room>> roomsListLd = new MutableLiveData<List<Room>>();
+    MutableLiveData<List<Room>> favPlacesForUserLd = new MutableLiveData<>();
+    MutableLiveData<LoadingState> favPlacesForUserLoadingState = new MutableLiveData<LoadingState>();
+    MutableLiveData<List<Room>> historyPlacesForUserLd = new MutableLiveData<>();
+    MutableLiveData<LoadingState> historyPlacesForUserLoadingState = new MutableLiveData<LoadingState>();
 
-    private Model(){reloadRoomList();}
+
+    public enum LoadingState {
+        loading,
+        loaded
+    }
+
+    private Model(){
+        reloadRoomList();
+        favPlacesForUserLoadingState.setValue(LoadingState.loaded);
+        historyPlacesForUserLoadingState.setValue(LoadingState.loaded);
+    }
 
     void reloadRoomList(){
         modelFirebase.getAllRooms((list)->{
@@ -38,14 +51,131 @@ public class Model {
         return roomsListLd;
     }
 
-    public LiveData<List<Room>> getAllRoomHistory() {
-        return null;
+
+
+
+    public interface GetAllFavPlacesForUserListener {
+        void onComplete(LinkedList<Room> data);
     }
 
-    public LiveData<List<Room>> getAllFavoritePlaces() {
-        return null;
-
+    public LiveData<List<Room>> getAllFavPlacesForUser() {
+        return favPlacesForUserLd;
     }
+
+
+    public void reloadFavPlaceListByMail(String email) {
+        favPlacesForUserLoadingState.setValue(LoadingState.loading);
+        modelFirebase.getAllFavPlacesForUserByEmail(email,(list) -> {
+            MyApplication.executorService.execute(() -> {
+                List<Room> favRoomList = new LinkedList<>();
+                for(Room r : list) {
+                    if (!r.isDeleted())
+                        favRoomList.add(r);
+                }
+                favPlacesForUserLd.postValue(favRoomList);
+                favPlacesForUserLoadingState.postValue(LoadingState.loaded);
+            });
+        });
+    }
+
+    public interface addRoomToFavPlacesByUserNameListener {
+        void onComplete();
+    }
+
+
+    public void addRoomToFavPlacesByUserName(String userName, Room room,addRoomToFavPlacesByUserNameListener listener) {
+        modelFirebase.addRoomToFavPlacesByUserName(userName,room,new addRoomToFavPlacesByUserNameListener(){
+            @Override
+            public void onComplete() {
+                Log.d("TAG", "add room to fav success");
+            }
+        });
+    }
+    public interface removeRoomFromFavPlacesByUserNameListener {
+        void onComplete();
+    }
+
+    public void removeRoomToFavPlacesByMail(String userName, String roomName,removeRoomFromFavPlacesByUserNameListener listener) {
+        modelFirebase.removeRoomFromFavPlacesByUserName(userName,roomName,new removeRoomFromFavPlacesByUserNameListener(){
+            @Override
+            public void onComplete() {
+                Log.d("TAG", "remove room from fav success");
+            }
+        });
+    }
+
+
+
+
+
+
+    public interface GetAllHistoryPlacesForUserListener {
+        void onComplete(LinkedList<Room> data);
+    }
+
+    public LiveData<List<Room>> getAllHistoryPlacesForUser() {
+        return historyPlacesForUserLd;
+    }
+
+
+    public void reloadHistoryPlacesListByMail(String email) {
+        historyPlacesForUserLoadingState.setValue(LoadingState.loading);
+        modelFirebase.getAllHistoryPlacesForUserByEmail(email,(list) -> {
+            MyApplication.executorService.execute(() -> {
+                List<Room> HistoryPlacesListRooms = new LinkedList<>();
+                for(Room r : list) {
+                    if (!r.isDeleted())
+                        HistoryPlacesListRooms.add(r);
+                }
+                historyPlacesForUserLd.postValue(HistoryPlacesListRooms);
+                historyPlacesForUserLoadingState.postValue(LoadingState.loaded);
+            });
+        });
+    }
+
+    public interface addRoomToHistoryPlacesByUserNameListener {
+        void onComplete();
+    }
+
+
+    public void addRoomToHistoryPlacesByUserName(String userName, Room room,addRoomToHistoryPlacesByUserNameListener listener) {
+        modelFirebase.addRoomToHistoryPlacesByUserName(userName,room,new addRoomToHistoryPlacesByUserNameListener(){
+            @Override
+            public void onComplete() {
+                Log.d("TAG", "add room to HistoryPlaces success");
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public interface GetMapByNameListener{
         void onComplete(MyWayMap map);
     }

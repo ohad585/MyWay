@@ -39,6 +39,7 @@ import com.example.myway.Model.MyWayMap;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.Room;
 import com.example.myway.Model.RoomGraph;
+import com.example.myway.Model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -66,6 +67,7 @@ public class MainActivity2 extends AppCompatActivity {
     private NavController navCtrl;
     private androidx.appcompat.widget.SearchView editsearch;
     private String searchString;
+    User currentUser;//if user is logged in
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
@@ -169,7 +171,8 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchString=query;
-                RoomGraph.RoomRepresent currentLocation=g.getRoomByName("167"); //change to current location
+                //here enter code so query is add to logged in user history
+                RoomGraph.RoomRepresent currentLocation=g.getRoomByName("167"); //change to current location of user
                 RoomGraph.RoomRepresent destination=g.getRoomByName(query);
                 if (destination==null){
                     showDialogRoomDoesntFound();
@@ -198,7 +201,6 @@ public class MainActivity2 extends AppCompatActivity {
 
                 return true;
             case R.id.menu_app_bar_search:
-                Log.d("TAGLIRON","KKK");
                 SearchManager searchManager =
                         (SearchManager) getSystemService(Context.SEARCH_SERVICE);
                 SearchView searchView =

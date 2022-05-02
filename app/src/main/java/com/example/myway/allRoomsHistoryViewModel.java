@@ -9,7 +9,7 @@ import com.example.myway.Model.Room;
 import java.util.List;
 
 public class allRoomsHistoryViewModel extends ViewModel {
-    LiveData<List<Room>> data = Model.instance.getAllRoomHistory();
+    LiveData<List<Room>> data = Model.instance.getAllHistoryPlacesForUser();
     public LiveData<List<Room>> getData() {
         return data;
     }
