@@ -8,12 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
 
 import com.example.myway.Bluetooth;
 import com.example.myway.Model.BluetoothRep;
 import com.example.myway.Model.IBeacon;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.Room;
+import com.example.myway.Model.User;
 import com.example.myway.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -35,6 +37,8 @@ public class UserLocationAPI {
     private Bluetooth bleAPI;
     private Resources appRes;
     private Marker userMarker;
+    User currentUser;
+
 
     private final LatLng SAMISHAMOON = new LatLng(31.80693, 34.65828);
     private final int ICON_SIZE = 72;
@@ -57,6 +61,12 @@ public class UserLocationAPI {
                         init();
                     }
                 });
+            }
+        });
+        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+            @Override
+            public void onComplete(User user) {
+                currentUser=user;
             }
         });
 

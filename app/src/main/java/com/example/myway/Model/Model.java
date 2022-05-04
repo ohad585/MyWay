@@ -15,9 +15,9 @@ public class Model {
     public static final Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Room>> roomsListLd = new MutableLiveData<List<Room>>();
-    MutableLiveData<List<Room>> favPlacesForUserLd = new MutableLiveData<>();
+    MutableLiveData<List<RoomGraph.RoomRepresent>> favPlacesForUserLd = new MutableLiveData<>();
     MutableLiveData<LoadingState> favPlacesForUserLoadingState = new MutableLiveData<LoadingState>();
-    MutableLiveData<List<Room>> historyPlacesForUserLd = new MutableLiveData<>();
+    MutableLiveData<List<RoomGraph.RoomRepresent>> historyPlacesForUserLd = new MutableLiveData<>();
     MutableLiveData<LoadingState> historyPlacesForUserLoadingState = new MutableLiveData<LoadingState>();
 
 
@@ -30,6 +30,13 @@ public class Model {
         reloadRoomList();
         favPlacesForUserLoadingState.setValue(LoadingState.loaded);
         historyPlacesForUserLoadingState.setValue(LoadingState.loaded);
+    }
+    public LiveData<LoadingState> getHistoryListForUserLoadingState() {
+        return historyPlacesForUserLoadingState;
+    }
+
+    public LiveData<LoadingState> getFavPlacesListForUserLoadingState() {
+        return favPlacesForUserLoadingState;
     }
 
     void reloadRoomList(){
@@ -58,7 +65,7 @@ public class Model {
         void onComplete(LinkedList<Room> data);
     }
 
-    public LiveData<List<Room>> getAllFavPlacesForUser() {
+    public LiveData<List<RoomGraph.RoomRepresent>> getAllFavPlacesForUser() {
         return favPlacesForUserLd;
     }
 
@@ -67,9 +74,8 @@ public class Model {
         favPlacesForUserLoadingState.setValue(LoadingState.loading);
         modelFirebase.getAllFavPlacesForUserByEmail(email,(list) -> {
             MyApplication.executorService.execute(() -> {
-                List<Room> favRoomList = new LinkedList<>();
-                for(Room r : list) {
-                    if (!r.isDeleted())
+                List<RoomGraph.RoomRepresent> favRoomList = new LinkedList<>();
+                for(RoomGraph.RoomRepresent r : list) {
                         favRoomList.add(r);
                 }
                 favPlacesForUserLd.postValue(favRoomList);
@@ -83,7 +89,7 @@ public class Model {
     }
 
 
-    public void addRoomToFavPlacesByUserName(String userName, Room room,addRoomToFavPlacesByUserNameListener listener) {
+    public void addRoomToFavPlacesByUserName(String userName, Room room) {
         modelFirebase.addRoomToFavPlacesByUserName(userName,room,new addRoomToFavPlacesByUserNameListener(){
             @Override
             public void onComplete() {
@@ -95,7 +101,7 @@ public class Model {
         void onComplete();
     }
 
-    public void removeRoomToFavPlacesByMail(String userName, String roomName,removeRoomFromFavPlacesByUserNameListener listener) {
+    public void removeRoomToFavPlacesByMail(String userName, String roomName) {
         modelFirebase.removeRoomFromFavPlacesByUserName(userName,roomName,new removeRoomFromFavPlacesByUserNameListener(){
             @Override
             public void onComplete() {
@@ -110,10 +116,10 @@ public class Model {
 
 
     public interface GetAllHistoryPlacesForUserListener {
-        void onComplete(LinkedList<Room> data);
+        void onComplete(LinkedList<RoomGraph.RoomRepresent> data);
     }
 
-    public LiveData<List<Room>> getAllHistoryPlacesForUser() {
+    public LiveData<List<RoomGraph.RoomRepresent>> getAllHistoryPlacesForUser() {
         return historyPlacesForUserLd;
     }
 
@@ -122,11 +128,14 @@ public class Model {
         historyPlacesForUserLoadingState.setValue(LoadingState.loading);
         modelFirebase.getAllHistoryPlacesForUserByEmail(email,(list) -> {
             MyApplication.executorService.execute(() -> {
-                List<Room> HistoryPlacesListRooms = new LinkedList<>();
-                for(Room r : list) {
-                    if (!r.isDeleted())
-                        HistoryPlacesListRooms.add(r);
+                List<RoomGraph.RoomRepresent> HistoryPlacesListRooms = new LinkedList<>();
+                for(RoomGraph.RoomRepresent r : list) {
+                    HistoryPlacesListRooms.add(r);
                 }
+
+
+
+
                 historyPlacesForUserLd.postValue(HistoryPlacesListRooms);
                 historyPlacesForUserLoadingState.postValue(LoadingState.loaded);
             });
@@ -138,8 +147,8 @@ public class Model {
     }
 
 
-    public void addRoomToHistoryPlacesByUserName(String userName, Room room,addRoomToHistoryPlacesByUserNameListener listener) {
-        modelFirebase.addRoomToHistoryPlacesByUserName(userName,room,new addRoomToHistoryPlacesByUserNameListener(){
+    public void addRoomToHistoryPlacesByUserMail(String userMail, RoomGraph.RoomRepresent room) {
+        modelFirebase.addRoomToHistoryPlacesByUserMail(userMail,room,new addRoomToHistoryPlacesByUserNameListener(){
             @Override
             public void onComplete() {
                 Log.d("TAG", "add room to HistoryPlaces success");

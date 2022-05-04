@@ -57,7 +57,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private final int CAMERA_ZOOM = 19;
 
     private Button micBtn;
-    private GoogleMap googleMap;
+    public static GoogleMap googleMap;
     private TextView instructionTV;
     private RoomGraph g;
     private MyWayMap myMap;
@@ -158,13 +158,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         mapFragment.getMapAsync(this);
         g = new RoomGraph();
-        Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("167"), g.getRoomByName("cafeteria")));
-//        Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
-//        Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
-
-        Log.d("TAG123", "onCreate: " + NavAlg.instance.Dijkstra(g.getRoomByName("168"), g.getRoomByName("J2")));
-        instructionTV = view.findViewById(R.id.instruction_map_fragment);
-        instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
+//        instructionTV = view.findViewById(R.id.instruction_map_fragment);
+//        instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
 
     }
 

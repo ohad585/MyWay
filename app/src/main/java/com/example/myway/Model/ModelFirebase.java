@@ -12,6 +12,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -20,12 +24,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.net.DatagramPacket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class ModelFirebase {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DatabaseReference mDatabase;
+
 
 
     public void addUser(User user, Model.AddUserListener listener) {
@@ -289,37 +298,27 @@ public class ModelFirebase {
             }
         });
     }
-    public void getAllFavPlacesForUserByEmail(String mail, Model.GetAllFavPlacesForUserListener listener) {
-        db.collection("users")
-                .whereEqualTo("email",mail)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public void getAllFavPlacesForUserByEmail(String mail,
+                                                  Model.GetAllHistoryPlacesForUserListener listener) {
+        DocumentReference docRef = db.collection("users").document(mail);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                LinkedList<String> favPlacesListString = new LinkedList<>();
-                LinkedList<Room> favPlacesListRooms = new LinkedList<>();
-
-                if (task.isSuccessful()) {
-                    DataSnapshot dataSnapshot = null;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String data = snapshot.getValue(String.class);
-                        favPlacesListString.add(data);
-                    }
-                    RoomGraph r = new RoomGraph();
-                    for (int i = 0; i < favPlacesListString.size(); i++) {
-                        r.getRoomByName(favPlacesListString.get(i));
-                        //רק מרום גרף יש המרה מסטרינג למציאת חדר כי שם הליסט,
-                        // אבל צריך שזה ישלוף כחדר ולא כרום רפרזנט
-                        //favPlacesListRooms.add((r);
-                    }
-                    Log.d("asdf", "First data : " + favPlacesListString.get(0));
-                    listener.onComplete(favPlacesListRooms);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                LinkedList<RoomGraph.RoomRepresent> favRoomsListRooms=new LinkedList<>();
+                DocumentSnapshot document = task.getResult();
+                List<String> favRoomsListString = (List<String>) document.get("Favorite Rooms");
+                RoomGraph.RoomRepresent r;
+                for (int i = 0; i < favRoomsListString.size(); i++) {
+                    r = NavAlg.g.getRoomByName(favRoomsListString.get(i));
+                    favRoomsListRooms.add(r);
                 }
+                listener.onComplete(favRoomsListRooms);
             }
         });
     }
     public void addRoomToFavPlacesByUserName(String userName, Room room,Model.addRoomToFavPlacesByUserNameListener listener) {
         String roomName=room.getDetails();
-        db.collection("users").document(userName).update("favoritePlaces",roomName)
+        db.collection("users").document(userName).update("favoritePlaces",FieldValue.arrayUnion(roomName))
                 .addOnSuccessListener((successListener) -> {
                     Log.d("TAG", "add room to fav success");
                 })
@@ -342,37 +341,30 @@ public class ModelFirebase {
     }
 
 
-    public void getAllHistoryPlacesForUserByEmail(String mail, Model.GetAllHistoryPlacesForUserListener listener) {
-        db.collection("users")
-                .whereEqualTo("email",mail)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public void getAllHistoryPlacesForUserByEmail(String mail,
+                                                  Model.GetAllHistoryPlacesForUserListener listener) {
+        DocumentReference docRef = db.collection("users").document(mail);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                LinkedList<String> HistoryPlacesListString = new LinkedList<>();
-                LinkedList<Room> HistoryPlacesListRooms = new LinkedList<>();
-
-                if (task.isSuccessful()) {
-                    DataSnapshot dataSnapshot = null;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String data = snapshot.getValue(String.class);
-                        HistoryPlacesListString.add(data);
-                    }
-                    RoomGraph r = new RoomGraph();
-                    for (int i = 0; i < HistoryPlacesListString.size(); i++) {
-                        r.getRoomByName(HistoryPlacesListString.get(i));
-                        //רק מרום גרף יש המרה מסטרינג למציאת חדר כי שם הליסט,
-                        // אבל צריך שזה ישלוף כחדר ולא כרום רפרזנט
-                        //favPlacesListRooms.add((r);
-                    }
-                    Log.d("asdf", "First data : " + HistoryPlacesListString.get(0));
-                    listener.onComplete(HistoryPlacesListRooms);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                LinkedList<RoomGraph.RoomRepresent> HistoryPlacesListRooms=new LinkedList<>();
+                DocumentSnapshot document = task.getResult();
+                List<String> HistoryPlacesListString = (List<String>) document.get("HistoryPlaces");
+                RoomGraph.RoomRepresent r;
+                for (int i = 0; i < HistoryPlacesListString.size(); i++) {
+                        r = NavAlg.g.getRoomByName(HistoryPlacesListString.get(i));
+                       HistoryPlacesListRooms.add(r);
                 }
+                listener.onComplete(HistoryPlacesListRooms);
             }
         });
     }
-    public void addRoomToHistoryPlacesByUserName(String userName, Room room,Model.addRoomToHistoryPlacesByUserNameListener listener) {
-        String roomName=room.getDetails();
-        db.collection("users").document(userName).update("HistoryPlaces",roomName)
+
+
+
+    public void addRoomToHistoryPlacesByUserMail(String userMail, RoomGraph.RoomRepresent room, Model.addRoomToHistoryPlacesByUserNameListener listener) {
+        String roomName=room.getRoom();
+        db.collection("users").document(userMail).update("HistoryPlaces", FieldValue.arrayUnion(roomName))
                 .addOnSuccessListener((successListener) -> {
                     Log.d("TAG", "add room to HistoryPlaces success");
                 })

@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -22,12 +24,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.view.View;
+import android.widget.TextView;
+
 import com.example.myway.Functions.UserLocationAPI;
+import com.example.myway.Model.Model;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.RoomGraph;
 import com.example.myway.Model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.LinkedList;
+import java.util.regex.PatternSyntaxException;
 
 public class MainActivity2 extends AppCompatActivity {
     private BluetoothManager btManager;
@@ -39,6 +51,9 @@ public class MainActivity2 extends AppCompatActivity {
     private androidx.appcompat.widget.SearchView editsearch;
     private String searchString;
     User currentUser;//if user is logged in
+    private TextView instructionTV;
+    private LinkedList <Polyline> polylineLinkedList=new LinkedList<>();
+
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
@@ -66,7 +81,12 @@ public class MainActivity2 extends AppCompatActivity {
         editsearch = (SearchView) findViewById(R.id.menu_app_bar_search);
         handleIntent(getIntent());
         g = new RoomGraph();
-
+        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+            @Override
+            public void onComplete(User user) {
+                currentUser=user;
+            }
+        });
 
 
         checkPermissions();
@@ -156,7 +176,12 @@ public class MainActivity2 extends AppCompatActivity {
                     Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(currentLocation,destination));
                     Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
                     Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
+                    Model.instance.addRoomToHistoryPlacesByUserMail(currentUser.getEmail(),destination);
+
                 }
+                instructionTV = findViewById(R.id.instruction_map_fragment);
+                instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
+                drawPath();
                 return true;
             }
         };
@@ -176,6 +201,7 @@ public class MainActivity2 extends AppCompatActivity {
                 return true;
             case R.id.menubar_favorites:
                 navCtrl.navigate(R.id.action_global_favorite_places_fragment);
+
                 return true;
 
             case R.id.menubar_history:
@@ -200,6 +226,31 @@ public class MainActivity2 extends AppCompatActivity {
     private void showDialogRoomDoesntFound() {
         DialogFragment newFragment = new DialogRoomNotFound();
         newFragment.show(getSupportFragmentManager(), "RoomNotFound");
+    }
+    private void drawPath() {
+        for(int i = 0; i<polylineLinkedList.size(); i++){
+            polylineLinkedList.get(i).setVisible(false);
+            polylineLinkedList.get(i).remove();
+        }
+        for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 1; i++) {
+            drawPolylineBetween2Rooms(
+                    g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
+                    g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i + 1)));
+        }
+    }
+
+    private void drawPolylineBetween2Rooms(RoomGraph.RoomRepresent roomA, RoomGraph.RoomRepresent roomB) {
+        PolylineOptions rectOptions=new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng( roomA.getDoorY(),roomA.getDoorX()),
+                        new LatLng( roomB.getDoorY(),roomB.getDoorX()))
+                .width(20)
+                .color(Color.BLACK);
+        Polyline polyline = MapsFragment.googleMap.addPolyline(rectOptions);
+        polylineLinkedList.add(polyline);
+        Log.d("drawPath","draw polyline between "+roomA.getRoom()+" and "+roomB.getRoom());
+
     }
 
 }

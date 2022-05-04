@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.chip.Chip
-        android:id="@+id/fav_place_row_chip"
+        android:id="@+id/fav_place_row_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"

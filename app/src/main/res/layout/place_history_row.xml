@@ -19,16 +19,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/places_history_row_chip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="@+id/places_history_row_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/places_history_row_name"
-        app:layout_constraintTop_toTopOf="@+id/places_history_row_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

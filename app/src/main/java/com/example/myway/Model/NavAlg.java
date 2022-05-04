@@ -7,7 +7,7 @@ import java.util.*;
 public class NavAlg  {
     public static NavAlg instance = new NavAlg();
 
-    private RoomGraph g;
+    public static RoomGraph g;
     private HashMap<StringKey,List<String >> paths = new HashMap<>();
     private ArrayList<String> arrayListOfInstruction=new ArrayList<>();
     private ArrayList<String> arrayListOfRooms=new ArrayList<String>();
