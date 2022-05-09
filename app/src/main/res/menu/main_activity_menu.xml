@@ -16,4 +16,10 @@
         android:title="Search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    <item
+        android:id="@+id/menu_bar_logOut"
+        android:title="Log Out" />
+    <item
+        android:id="@+id/menu_bar_about_us"
+        android:title="About Us" />
 </menu>

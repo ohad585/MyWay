@@ -52,9 +52,5 @@
             android:name="myMapName"
             app:argType="string" />
     </activity>
-    <fragment
-        android:id="@+id/historyPage"
-        android:name="com.example.myway.historyPage"
-        android:label="fragment_history_page"
-        tools:layout="@layout/fragment_history_page" />
+
 </navigation>

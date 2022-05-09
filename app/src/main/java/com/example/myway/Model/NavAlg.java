@@ -9,8 +9,8 @@ public class NavAlg  {
 
     public static RoomGraph g;
     private HashMap<StringKey,List<String >> paths = new HashMap<>();
-    private ArrayList<String> arrayListOfInstruction=new ArrayList<>();
-    private ArrayList<String> arrayListOfRooms=new ArrayList<String>();
+    private ArrayList<String> arrayListOfInstruction;
+    private ArrayList<String> arrayListOfRooms;
 
     private NavAlg(){
         g=new RoomGraph();
@@ -45,6 +45,8 @@ public class NavAlg  {
     }
 
     public String Dijkstra(RoomGraph.RoomRepresent start, RoomGraph.RoomRepresent destination){
+        arrayListOfRooms=new ArrayList<>();
+        arrayListOfInstruction=new ArrayList<>();
         g.setAlldistance();
         String text = "Djikstra :\n";
         // d[start]=0 (other vertex's d_value is infinity by default), S={0} , Q = vertex

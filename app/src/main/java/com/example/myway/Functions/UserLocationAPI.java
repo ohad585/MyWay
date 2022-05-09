@@ -30,6 +30,7 @@ import java.util.List;
 
 public class UserLocationAPI {
     private LatLng userLocation;
+    private String userLocationByRoom;
     private List<Room> allRooms;
     private HashMap<String,BluetoothRep> iBeaconsInRange;
     private List<IBeacon> allBeacons;
@@ -125,6 +126,7 @@ public class UserLocationAPI {
                     double x = beacon.getLatitude();
                     double y = beacon.getLongitude();
                     userLocation = new LatLng(y,x);
+                    userLocationByRoom=beacon.getName();
                     updateUserIconLocation();
                     return;
                 }
@@ -224,6 +226,10 @@ public class UserLocationAPI {
 
         }
 
+    }
+
+    public String getCurrentUserLocation(){
+        return userLocationByRoom;
     }
 
 

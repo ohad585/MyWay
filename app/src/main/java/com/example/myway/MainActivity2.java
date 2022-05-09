@@ -167,7 +167,7 @@ public class MainActivity2 extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 searchString=query;
                 //here enter code so query is add to logged in user history
-                RoomGraph.RoomRepresent currentLocation=g.getRoomByName("167"); //change to current location of user
+                RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentUserLocation()); //change to current location of user
                 RoomGraph.RoomRepresent destination=g.getRoomByName(query);
                 if (destination==null){
                     showDialogRoomDoesntFound();
@@ -201,7 +201,6 @@ public class MainActivity2 extends AppCompatActivity {
                 return true;
             case R.id.menubar_favorites:
                 navCtrl.navigate(R.id.action_global_favorite_places_fragment);
-
                 return true;
 
             case R.id.menubar_history:
@@ -215,9 +214,14 @@ public class MainActivity2 extends AppCompatActivity {
                         (SearchView)item.getActionView();
                 searchView.setSearchableInfo(
                         searchManager.getSearchableInfo(getComponentName()));
-
                 return true;
-
+            case R.id.menu_bar_logOut:
+                navCtrl.navigate(R.id.action_global_home_page);
+                currentUser=null;
+                return true;
+            case R.id.menu_bar_about_us:
+                navCtrl.navigate(R.id.action_global_about_us_fragment);
+                return true;
         }
         return true;
     }

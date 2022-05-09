@@ -31,5 +31,17 @@
         android:name="com.example.myway.placesHistory"
         android:label="History Page"
         tools:layout="@layout/places_history_fragment" >
-    </fragment><action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/><action android:id="@+id/action_global_favorite_places_fragment" app:destination="@id/favorite_places_fragment"/><action android:id="@+id/action_global_places_history_fragment" app:destination="@id/places_history_fragment"/><action android:id="@+id/action_global_mapFragment" app:destination="@id/mapFragment"/>
+    </fragment>
+    <action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/><action android:id="@+id/action_global_favorite_places_fragment" app:destination="@id/favorite_places_fragment"/><action android:id="@+id/action_global_places_history_fragment" app:destination="@id/places_history_fragment"/><action android:id="@+id/action_global_mapFragment" app:destination="@id/mapFragment"/>
+    <fragment
+        android:id="@+id/home_page"
+        android:name="com.example.myway.home_page_fragment"
+        android:label="fragment_home_page"
+        tools:layout="@layout/home_page_fragment" />
+    <action android:id="@+id/action_global_home_page" app:destination="@id/home_page" />
+    <fragment
+        android:id="@+id/about_us_fragment"
+        android:name="com.example.myway.about_us_fragment"
+        android:label="about_us_fragment"
+        tools:layout="@layout/about_us_page" /><action android:id="@+id/action_global_about_us_fragment" app:destination="@id/about_us_fragment"/>
 </navigation>

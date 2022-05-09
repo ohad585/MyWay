@@ -32,29 +32,16 @@
         app:layout_constraintTop_toBottomOf="@+id/home_logo" />
 
     <Button
-        android:id="@+id/home_continue_as_guest_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#D51B2FA3"
-        android:fontFamily="@font/anton"
-        android:text="Continue as a guest"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/home_register_btn"
-        app:layout_constraintStart_toStartOf="@+id/home_register_btn"
-        app:layout_constraintTop_toBottomOf="@+id/home_register_btn" />
-
-    <Button
         android:id="@+id/home_register_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
         android:backgroundTint="#D51B2FA3"
         android:fontFamily="@font/anton"
         android:text="REGISTER"
         android:textColor="@color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/home_continue_as_guest_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/home_log_in_btn"
         app:layout_constraintStart_toStartOf="@+id/home_log_in_btn"
         app:layout_constraintTop_toBottomOf="@+id/home_log_in_btn" />
