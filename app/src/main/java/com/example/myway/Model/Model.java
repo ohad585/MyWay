@@ -62,7 +62,7 @@ public class Model {
 
 
     public interface GetAllFavPlacesForUserListener {
-        void onComplete(LinkedList<Room> data);
+        void onComplete(LinkedList<RoomGraph.RoomRepresent> data);
     }
 
     public LiveData<List<RoomGraph.RoomRepresent>> getAllFavPlacesForUser() {
@@ -132,10 +132,6 @@ public class Model {
                 for(RoomGraph.RoomRepresent r : list) {
                     HistoryPlacesListRooms.add(r);
                 }
-
-
-
-
                 historyPlacesForUserLd.postValue(HistoryPlacesListRooms);
                 historyPlacesForUserLoadingState.postValue(LoadingState.loaded);
             });

@@ -26,9 +26,7 @@ import java.util.List;
 
 public class placesHistory extends Fragment {
     View view;
-    RoomGraph.RoomRepresent r;
     View progBar;
-    TextView email;
     allRoomsHistoryViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;

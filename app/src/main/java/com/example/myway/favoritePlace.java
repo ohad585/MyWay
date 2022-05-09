@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,9 +27,8 @@ import java.util.List;
 
 public class favoritePlace extends Fragment {
     View view;
-    RoomGraph.RoomRepresent r;
     View progBar;
-    allRoomsHistoryViewModel viewModel;
+    allFavoritePlacesViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     User currentUser;
@@ -36,7 +36,7 @@ public class favoritePlace extends Fragment {
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(allRoomsHistoryViewModel.class);
+        viewModel = new ViewModelProvider(this).get(allFavoritePlacesViewModel.class);
     }
 
     @Override
@@ -111,8 +111,8 @@ public class favoritePlace extends Fragment {
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            placeNameTV = itemView.findViewById(R.id.fav_place_row_name);
-            ifFavBtn=itemView.findViewById(R.id.fav_place_row_cb);
+            placeNameTV = itemView.findViewById(R.id.fav_places_row_name);
+            ifFavBtn=itemView.findViewById(R.id.fav_places_row_cb);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -127,13 +127,12 @@ public class favoritePlace extends Fragment {
         public void bind(RoomGraph.RoomRepresent r) {
             placeNameTV.setText(r.getRoom());
             ifFavBtn.setChecked(true);//always be true on this page
-            ifFavBtn.setOnClickListener(new View.OnClickListener() {
+            ifFavBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    if (ifFavBtn.isChecked() == true) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         ifFavBtn.setChecked(false);
                         Model.instance.removeRoomToFavPlacesByMail(currentUser.getEmail(), placeNameTV.getText().toString());
-                    }
+
                 }
             });
         }

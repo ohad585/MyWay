@@ -43,5 +43,24 @@
         android:id="@+id/about_us_fragment"
         android:name="com.example.myway.about_us_fragment"
         android:label="about_us_fragment"
-        tools:layout="@layout/about_us_page" /><action android:id="@+id/action_global_about_us_fragment" app:destination="@id/about_us_fragment"/>
+        tools:layout="@layout/about_us_page" />
+    <action android:id="@+id/action_global_about_us_fragment" app:destination="@id/about_us_fragment" />
+    <fragment
+        android:id="@+id/map_key_fragment"
+        android:name="com.example.myway.map_key_fragment"
+        android:label="Map Key"
+        tools:layout="@layout/map_key_fragment" />
+    <action android:id="@+id/action_global_map_key_fragment" app:destination="@id/map_key_fragment" />
+    <fragment
+        android:id="@+id/application_guidelines"
+        android:name="com.example.myway.application_guidelines"
+        android:label="fragment_application_guidelines"
+        tools:layout="@layout/app_guide_fragment" />
+    <action android:id="@+id/action_global_application_guidelines" app:destination="@id/application_guidelines" />
+    <fragment
+        android:id="@+id/fragment_report"
+        android:name="com.example.myway.report_fragment"
+        android:label="fragment_report_fragment"
+        tools:layout="@layout/report_fragment" />
+    <action android:id="@+id/action_global_report_fragment" app:destination="@id/fragment_report" />
 </navigation>

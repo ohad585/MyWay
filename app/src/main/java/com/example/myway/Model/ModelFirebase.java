@@ -299,7 +299,7 @@ public class ModelFirebase {
         });
     }
     public void getAllFavPlacesForUserByEmail(String mail,
-                                                  Model.GetAllHistoryPlacesForUserListener listener) {
+                                                  Model.GetAllFavPlacesForUserListener listener) {
         DocumentReference docRef = db.collection("users").document(mail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -330,7 +330,7 @@ public class ModelFirebase {
 
     public void removeRoomFromFavPlacesByUserName(String userName, String roomName, Model.removeRoomFromFavPlacesByUserNameListener removeRoomFromFavPlacesByUserNameListener) {
         //String roomName=room.getDetails();
-        db.collection("users").document(userName).update("favoritePlaces", FieldValue.arrayRemove(roomName))
+        db.collection("users").document(userName).update("Favorite Rooms", FieldValue.arrayRemove(roomName))
                 .addOnSuccessListener((successListener) -> {
                     Log.d("TAG", "remove room from fav success");
                 })

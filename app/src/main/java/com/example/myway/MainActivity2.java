@@ -222,6 +222,15 @@ public class MainActivity2 extends AppCompatActivity {
             case R.id.menu_bar_about_us:
                 navCtrl.navigate(R.id.action_global_about_us_fragment);
                 return true;
+            case R.id.menu_bar_map_guide:
+                navCtrl.navigate(R.id.action_global_application_guidelines);
+                return true;
+            case R.id.menu_bar_map_keys:
+                navCtrl.navigate(R.id.action_global_map_key_fragment);
+                return true;
+            case R.id.menu_bar_report:
+                navCtrl.navigate(R.id.action_global_report_fragment);
+                return true;
         }
         return true;
     }

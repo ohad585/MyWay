@@ -7,30 +7,28 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/fav_place_row_name"
+        android:id="@+id/fav_places_row_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="76dp"
         android:layout_marginTop="36dp"
         android:layout_marginBottom="36dp"
         android:text="name"
-        android:textSize="34sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/fav_place_row_cb"
+    <CheckBox
+        android:id="@+id/fav_places_row_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
         android:minWidth="48dp"
         android:minHeight="48dp"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fav_place_row_name"
+        app:layout_constraintBottom_toBottomOf="@+id/fav_places_row_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fav_place_row_name"
-        app:layout_constraintTop_toTopOf="@+id/fav_place_row_name" />
+        app:layout_constraintStart_toEndOf="@+id/fav_places_row_name"
+        app:layout_constraintTop_toTopOf="@+id/fav_places_row_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
