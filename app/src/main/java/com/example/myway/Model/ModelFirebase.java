@@ -321,9 +321,11 @@ public class ModelFirebase {
         db.collection("users").document(userName).update("favoritePlaces",FieldValue.arrayUnion(roomName))
                 .addOnSuccessListener((successListener) -> {
                     Log.d("TAG", "add room to fav success");
+                    listener.onComplete(true);
                 })
                 .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
+                    listener.onComplete(false);
                 });
 
     }

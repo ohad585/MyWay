@@ -5,9 +5,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.myway.Model.Model;
@@ -20,42 +28,83 @@ public class DialogRoomDetails extends DialogFragment {
 
     Room r;
     User currentUser;
+    Dialog dialog;
 
-    public DialogRoomDetails(Room r1) {
+    public DialogRoomDetails(Room r1 ,User cUser) {
         r = r1;
+        currentUser=cUser;
     }
 
-    @SuppressLint("ResourceType")
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.dialog_room_details, container, false);
+        TextView roomName = view.findViewById(R.id.dialog_room_details_room_name_tv);
+        Button okBtn = view.findViewById(R.id.dialog_room_details_ok_btn);
+        Button cnclBtn = view.findViewById(R.id.dialog_room_details_cncl_btn);
+        Button favBtn = view.findViewById(R.id.dialog_room_details_fav_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(User user) {
-                currentUser = user;
+            public void onClick(View view) {
+                Log.d("TAG", "onClick: OK Clicked");
+                dismiss();
             }
         });
-        ArrayList selectedItems = new ArrayList();
-        String addTOfav = "ADD TO FAVORITE";
-        selectedItems.add(addTOfav);
-        // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Room Details:")
-                .setMessage(r.getDetails())
-                .setMultiChoiceItems(R.xml.checkboxarray, null, new DialogInterface.OnMultiChoiceClickListener() {
+
+        cnclBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "onClick: Cancel Clicked");
+                dismiss();
+
+            }
+        });
+
+        favBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "User :"+currentUser.getUserName() + " added " + r.getDetails() + " to favorites");
+                Model.instance.addRoomToFavPlacesByUserName(currentUser.getEmail(), r, new Model.addRoomToFavPlacesByUserNameListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            Model.instance.addRoomToFavPlacesByUserName(currentUser.getUserName(), r);
+                    public void onComplete(boolean success) {
+                        if(success){
+                            Toast.makeText(getActivity(),"Room added to favorites", Toast.LENGTH_SHORT).show();
+                            dismiss();
+                        }else {
+                            Toast.makeText(getActivity(),"error try again", Toast.LENGTH_SHORT).show();
                         }
                     }
-                })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // FIRE ZE MISSILES!
-                    }
                 });
+            }
+        });
+        roomName.setText(r.getDetails());
 
-        // Create the AlertDialog object and return it
-        return builder.create();
+        return view;
+    }
+
+//    @SuppressLint("ResourceType")
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        String addTOfav = "ADD TO FAVORITE";
+//        String[] selectedItems = new String[]{addTOfav,"Zibi"};
+//        boolean[] checkedItems = new boolean[]{false,false};
+//        // Use the Builder class for convenient dialog construction
+//        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+//        View promptView = layoutInflater.inflate(R.layout.dialog_room_details, null);
+//
+//
+//        // Create the AlertDialog object and return it
+//        return builder.create();
+//    }
+
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        dialog = super.onCreateDialog(savedInstanceState);
+
+        return dialog;
+
     }
 }
 

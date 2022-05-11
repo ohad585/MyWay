@@ -307,8 +307,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 Model.instance.GetRoomDetails(polygon, new Model.GetRoomDetailsListener() {
                     @Override
                     public void onComplete(Room room) {
-                        DialogFragment newFragment = new DialogRoomDetails(room);
-                        newFragment.show(getParentFragmentManager(), "TAG");
+                        DialogFragment newFragment = new DialogRoomDetails(room,myUser);
+                        newFragment.show(getActivity().getSupportFragmentManager(),"TAG");
+
                     }
                 });
 

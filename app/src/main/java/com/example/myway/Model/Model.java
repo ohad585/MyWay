@@ -85,17 +85,12 @@ public class Model {
     }
 
     public interface addRoomToFavPlacesByUserNameListener {
-        void onComplete();
+        void onComplete(boolean success);
     }
 
 
-    public void addRoomToFavPlacesByUserName(String userName, Room room) {
-        modelFirebase.addRoomToFavPlacesByUserName(userName,room,new addRoomToFavPlacesByUserNameListener(){
-            @Override
-            public void onComplete() {
-                Log.d("TAG", "add room to fav success");
-            }
-        });
+    public void addRoomToFavPlacesByUserName(String userName, Room room , addRoomToFavPlacesByUserNameListener listener) {
+        modelFirebase.addRoomToFavPlacesByUserName(userName,room,listener);
     }
     public interface removeRoomFromFavPlacesByUserNameListener {
         void onComplete();
