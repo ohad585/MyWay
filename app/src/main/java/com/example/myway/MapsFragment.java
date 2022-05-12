@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myway.Functions.UserLocationAPI;
 import com.example.myway.Model.Model;
 import com.example.myway.Model.MyWayMap;
 import com.example.myway.Model.NavAlg;
@@ -51,11 +52,12 @@ import java.util.Objects;
 public class MapsFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnPolylineClickListener,
         GoogleMap.OnPolygonClickListener {
+    private static UserLocationAPI userLocationAPI;
     private View view;
-    private final int ICON_SIZE = 90;
+    private final int ICON_SIZE = 60;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
     private final int CAMERA_ZOOM = 19;
-
+    Bluetooth bleInterface;
     private Button micBtn;
     public static GoogleMap googleMap;
     private TextView instructionTV;
@@ -65,6 +67,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private TextToSpeech textToSpeech;
     private User myUser;
     View mapView;
+
 
 
     @Nullable
@@ -78,7 +81,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
-
                 // if No error is found then only it will run
                 if(i!=TextToSpeech.ERROR){
                     // To Choose language of speech
@@ -103,7 +105,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         micBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(0).toString(),TextToSpeech.QUEUE_FLUSH,null);
+                for (int i=0;i<NavAlg.instance.arrayListOfInstruction().size();i++){
+                    textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(i).toString(),TextToSpeech.QUEUE_FLUSH,null);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -113,6 +122,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private void preSetup() {
         if(myUser.isBlind()){
             //User Is Blind
+            instructionTV = view.findViewById(R.id.instruction_map_fragment);
+
             instructionTV.setVisibility(View.INVISIBLE);
                 mapView.setVisibility(View.INVISIBLE);
                 mapView.setClickable(false);
@@ -186,6 +197,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.addMarker(new MarkerOptions().position(myMap.getLatLng()).title(myMap.getName()));
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(CAMERA_ZOOM));
+        bleInterface=((MainActivity2) getActivity()).getBluthoothInterface();
+        userLocationAPI = new UserLocationAPI(googleMap,bleInterface,getResources());
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
@@ -385,6 +398,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 Log.d("TAG", "onActivityResult: "+Objects.requireNonNull(result).get(0));
             }
         }
+    }
+
+    public static UserLocationAPI getUserLocationAPI(){
+        return userLocationAPI;
     }
 
 }

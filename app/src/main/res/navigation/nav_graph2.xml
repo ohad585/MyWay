@@ -25,12 +25,18 @@
         android:name="com.example.myway.favoritePlace"
         android:label="Favorites Page"
         tools:layout="@layout/favorite_place_fragment" >
+        <action
+            android:id="@+id/action_favorite_places_fragment_to_mainActivity22"
+            app:destination="@id/mainActivity22" />
     </fragment>
     <fragment
         android:id="@+id/places_history_fragment"
         android:name="com.example.myway.placesHistory"
         android:label="History Page"
         tools:layout="@layout/places_history_fragment" >
+        <action
+            android:id="@+id/action_places_history_fragment_to_mainActivity22"
+            app:destination="@id/mainActivity22" />
     </fragment>
     <action android:id="@+id/action_global_personal_page_fragment" app:destination="@id/personal_page_fragment"/><action android:id="@+id/action_global_favorite_places_fragment" app:destination="@id/favorite_places_fragment"/><action android:id="@+id/action_global_places_history_fragment" app:destination="@id/places_history_fragment"/><action android:id="@+id/action_global_mapFragment" app:destination="@id/mapFragment"/>
     <fragment
@@ -63,4 +69,13 @@
         android:label="fragment_report_fragment"
         tools:layout="@layout/report_fragment" />
     <action android:id="@+id/action_global_report_fragment" app:destination="@id/fragment_report" />
+    <activity
+        android:id="@+id/mainActivity22"
+        android:name="com.example.myway.MainActivity2"
+        android:label="activity_main2"
+        tools:layout="@layout/activity_main2" >
+        <argument
+            android:name="destRoom"
+            app:argType="string" />
+    </activity>
 </navigation>

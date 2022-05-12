@@ -228,8 +228,10 @@ public class UserLocationAPI {
 
     }
 
+    //check it when beacon is on
     public String getCurrentUserLocation(){
-        return userLocationByRoom;
+        Log.d("TAGAPI"," "+ userLocationByRoom);
+        return "163";
     }
 
 
