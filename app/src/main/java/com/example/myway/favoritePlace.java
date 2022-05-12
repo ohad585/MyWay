@@ -1,6 +1,8 @@
 package com.example.myway;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -32,6 +35,7 @@ public class favoritePlace extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     User currentUser;
+    public String destinationRoom;
 
 
     public void onAttach(@NonNull Context context) {
@@ -45,6 +49,7 @@ public class favoritePlace extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.favorite_place_fragment, container, false);
         progBar = view.findViewById(R.id.fav_place_progressBar);
+
         progBar.setVisibility(View.VISIBLE);
         Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
             @Override
@@ -86,16 +91,25 @@ public class favoritePlace extends Fragment {
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(int position, View v) {
-                RoomGraph.RoomRepresent room = viewModel.getData().getValue().get(position);
-                Log.d("TAG", "room is clicked: " + room.getRoom());
-            }
-        });
+                public void onItemClick(int position, View v) {
+                    progBar.setVisibility(View.VISIBLE);
+                    RoomGraph.RoomRepresent re = viewModel.getData().getValue().get(position);
+                    Log.d("TAGFAVORITE", "roomFav is clicked: " + re.getRoom());
+                    navigateToFavRoom(re.getRoom());
+                }
+            });
         swipeRefresh.setRefreshing(Model.instance.getFavPlacesListForUserLoadingState().getValue() == Model.LoadingState.loading);
         Model.instance.getFavPlacesListForUserLoadingState().observe(getViewLifecycleOwner(), loadingState ->
                 swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading));
 
     }
+
+    private void navigateToFavRoom(String destRoom) {
+            destinationRoom=destRoom;
+            Intent i = new Intent(getActivity(), MainActivity2.class);
+            startActivity(i);
+            ((MainActivity2) getActivity()).navigateToRoomFromOtherPage(destinationRoom);
+        }
 
     private void refreshData(){
         Log.d("TAG", "refreshData:fav rooms");

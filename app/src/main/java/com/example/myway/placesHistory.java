@@ -1,6 +1,7 @@
 package com.example.myway;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ public class placesHistory extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     User currentUser;
+    public String destinationRoom;
+
 
 
     public void onAttach(@NonNull Context context) {
@@ -87,14 +90,24 @@ public class placesHistory extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                RoomGraph.RoomRepresent room = viewModel.getData().getValue().get(position);
-                Log.d("TAG", "room is clicked: " + room.getRoom());
+                progBar.setVisibility(View.VISIBLE);
+                RoomGraph.RoomRepresent re = viewModel.getData().getValue().get(position);
+                Log.d("TAGHISTORY", "room HISTORY is clicked: " + re.getRoom());
+                navigateToHistoryRoom(re.getRoom());
             }
         });
+
         swipeRefresh.setRefreshing(Model.instance.getHistoryListForUserLoadingState().getValue() == Model.LoadingState.loading);
         Model.instance.getHistoryListForUserLoadingState().observe(getViewLifecycleOwner(), loadingState ->
                 swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading));
 
+    }
+
+    private void navigateToHistoryRoom(String destRoom) {
+        destinationRoom=destRoom;
+        Intent i = new Intent(getActivity(), MainActivity2.class);
+        startActivity(i);
+        ((MainActivity2) getActivity()).navigateToRoomFromOtherPage(destinationRoom);
     }
 
     private void refreshData(){

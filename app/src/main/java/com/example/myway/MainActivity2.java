@@ -45,7 +45,7 @@ public class MainActivity2 extends AppCompatActivity {
     private BluetoothManager btManager;
     private BluetoothAdapter btAdapter;
     private Bluetooth bleInterface;
-    private UserLocationAPI userLocationAPI;
+    public  UserLocationAPI userLocationAPI;
     private final int ICON_SIZE = 90;
     private NavController navCtrl;
     private androidx.appcompat.widget.SearchView editsearch;
@@ -112,6 +112,7 @@ public class MainActivity2 extends AppCompatActivity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
         bleInterface = new Bluetooth(btAdapter);
+
 
 
     }
@@ -263,6 +264,39 @@ public class MainActivity2 extends AppCompatActivity {
         Polyline polyline = MapsFragment.googleMap.addPolyline(rectOptions);
         polylineLinkedList.add(polyline);
         Log.d("drawPath","draw polyline between "+roomA.getRoom()+" and "+roomB.getRoom());
+
+    }
+
+    public void navigateToRoomFromOtherPage(String destRoom){
+
+        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+            @Override
+            public void onComplete(User user) {
+                currentUser=user;
+            }
+        });
+        userLocationAPI=MapsFragment.getUserLocationAPI();
+        String currentLoc=userLocationAPI.getCurrentUserLocation();
+        RoomGraph.RoomRepresent currentLocation=g.getRoomByName(currentLoc); //change to current location of user
+        RoomGraph.RoomRepresent destination=g.getRoomByName(destRoom);
+        if (destination==null){
+            showDialogRoomDoesntFound();
+        }
+        else{
+            Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(currentLocation,destination));
+            Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+            Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
+            Model.instance.addRoomToHistoryPlacesByUserMail(currentUser.getEmail(),destination);
+
+        }
+        //instructionTV.findViewById(R.id.instruction_map_fragment);
+        //instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
+        drawPath();
+
+
+    }
+    public Bluetooth getBluthoothInterface(){
+        return bleInterface;
 
     }
 
