@@ -106,7 +106,7 @@ public class NavAlg  {
                 text2+=current.getRoom()+" ";
                 if(current.parent!=null){
                     RoomGraph.Edge currentEdge=g.findEdgeByTwoRooms(current,current.parent);
-                    arrayListOfInstruction(pathString);
+                    arrayListOfInstructionAdd(pathString);
                     pathString+=currentEdge.getInstruction()+"\n";
                 }
                 arrayListOfRooms.add(current.getRoom());
@@ -121,7 +121,7 @@ public class NavAlg  {
         return text+"\n"+text2;
     }
 
-    public void arrayListOfInstruction(String instruction){
+    public void arrayListOfInstructionAdd(String instruction){
         if(instruction!=""){
             arrayListOfInstruction.add(instruction);
         }

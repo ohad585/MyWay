@@ -55,7 +55,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static UserLocationAPI userLocationAPI;
     private View view;
     private final int ICON_SIZE = 60;
-    private static final int REQUEST_CODE_SPEECH_INPUT = 1;
+    public static final int REQUEST_CODE_SPEECH_INPUT = 1;
     private final int CAMERA_ZOOM = 19;
     Bluetooth bleInterface;
     private Button micBtn;
@@ -64,7 +64,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private RoomGraph g;
     private MyWayMap myMap;
     private String name = null;
-    private TextToSpeech textToSpeech;
+    public static TextToSpeech textToSpeech;
     private User myUser;
     View mapView;
 
@@ -79,6 +79,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         instructionTV = view.findViewById(R.id.instruction_map_fragment);
         mapView = view.findViewById(R.id.map);
+        micBtn = view.findViewById(R.id.maps_mic_btn);
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -102,20 +103,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        micBtn = view.findViewById(R.id.maps_mic_btn);
-        micBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (int i=0;i<NavAlg.instance.arrayListOfInstruction().size();i++){
-                    textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(i).toString(),TextToSpeech.QUEUE_FLUSH,null);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+
 
         return view;
     }
@@ -154,14 +142,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             //User can see
             micBtn.setClickable(false);
             micBtn.setVisibility(View.INVISIBLE);
-            Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
-                @Override
-                public void onComplete(MyWayMap map) {
-                    myMap = map;
-                    setup();
-                }
-            });
         }
+        Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
+            @Override
+            public void onComplete(MyWayMap map) {
+                myMap = map;
+                setup();
+            }
+        });
     }
 
     private void setup() {
@@ -194,12 +182,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap1) {
         googleMap=googleMap1;
+        if(myUser.isBlind()){
+            mapView.setVisibility(View.INVISIBLE);
+        }
         List<Polygon> polygonList=new LinkedList<>();
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.addMarker(new MarkerOptions().position(myMap.getLatLng()).title(myMap.getName()));
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(CAMERA_ZOOM));
         bleInterface=((MainActivity2) getActivity()).getBluthoothInterface();
         userLocationAPI = new UserLocationAPI(googleMap,bleInterface,getResources());
+        ((MainActivity2) getActivity()).setupAPI(userLocationAPI);
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
@@ -388,15 +380,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                    @Nullable Intent data)
-    {
+                                    @Nullable Intent data) {
         Log.d("TAGO", "onActivityResult: ++++++++++++++++++");
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+        if (requestCode == MapsFragment.REQUEST_CODE_SPEECH_INPUT) {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(
                         RecognizerIntent.EXTRA_RESULTS);
-                Log.d("TAG", "onActivityResult: "+Objects.requireNonNull(result).get(0));
+                Log.d("TAG", "onActivityResult: " + Objects.requireNonNull(result).get(0));
+                ((MainActivity2) getActivity()).startNavigation(Objects.requireNonNull(result).get(0));
             }
         }
     }

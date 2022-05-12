@@ -155,56 +155,56 @@ public class RoomGraph {
         edges.add(new Edge("166A","J2","Turn right"));
 
 
-        edges.add(new Edge("166A","166B",""));
-        edges.add(new Edge("166B","166A",""));
+        edges.add(new Edge("166A","166B","N"));
+        edges.add(new Edge("166B","166A","N"));
 
-        edges.add(new Edge("166A","166C",""));
-        edges.add(new Edge("166C","166A",""));
+        edges.add(new Edge("166A","166C","N"));
+        edges.add(new Edge("166C","166A","N"));
 
         edges.add(new Edge("166A","165","Turn left"));
         edges.add(new Edge("165","166A","Turn right"));
 
-        edges.add(new Edge("166B","165",""));
-        edges.add(new Edge("165","166B",""));
+        edges.add(new Edge("166B","165","N"));
+        edges.add(new Edge("165","166B","N"));
 
-        edges.add(new Edge("165","164",""));
-        edges.add(new Edge("164","165",""));
+        edges.add(new Edge("165","164","N"));
+        edges.add(new Edge("164","165","N"));
 
         edges.add(new Edge("166B","164","Turn left"));
         edges.add(new Edge("164","166B","Turn right"));
 
-        edges.add(new Edge("165","163",""));
-        edges.add(new Edge("163","165",""));
+        edges.add(new Edge("165","163","N"));
+        edges.add(new Edge("163","165","N"));
 
-        edges.add(new Edge("165","162",""));
-        edges.add(new Edge("162","165",""));
+        edges.add(new Edge("165","162","N"));
+        edges.add(new Edge("162","165","N"));
 
-        edges.add(new Edge("165","161",""));
-        edges.add(new Edge("161","165",""));
+        edges.add(new Edge("165","161","N"));
+        edges.add(new Edge("161","165","N"));
 
-        edges.add(new Edge("164","160",""));
-        edges.add(new Edge("160","164",""));
+        edges.add(new Edge("164","160","N"));
+        edges.add(new Edge("160","164","N"));
 
-        edges.add(new Edge("163","160",""));
-        edges.add(new Edge("160","163",""));
+        edges.add(new Edge("163","160","N"));
+        edges.add(new Edge("160","163","N"));
 
-        edges.add(new Edge("163","162",""));
-        edges.add(new Edge("162","163",""));
+        edges.add(new Edge("163","162","N"));
+        edges.add(new Edge("162","163","N"));
 
-        edges.add(new Edge("163","164",""));
-        edges.add(new Edge("164","163",""));
+        edges.add(new Edge("163","164","N"));
+        edges.add(new Edge("164","163","N"));
 
-        edges.add(new Edge("163","165",""));
-        edges.add(new Edge("165","163",""));
+        edges.add(new Edge("163","165","N"));
+        edges.add(new Edge("165","163","N"));
 
-        edges.add(new Edge("162","160",""));
-        edges.add(new Edge("160","162",""));
+        edges.add(new Edge("162","160","N"));
+        edges.add(new Edge("160","162","N"));
 
-        edges.add(new Edge("162","161",""));
-        edges.add(new Edge("161","162",""));
+        edges.add(new Edge("162","161","N"));
+        edges.add(new Edge("161","162","N"));
 
-        edges.add(new Edge("161","160",""));
-        edges.add(new Edge("160","161",""));
+        edges.add(new Edge("161","160","N"));
+        edges.add(new Edge("160","161","N"));
 
 
     }

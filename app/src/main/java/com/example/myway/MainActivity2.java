@@ -1,6 +1,7 @@
 package com.example.myway;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -13,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
@@ -38,7 +40,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.regex.PatternSyntaxException;
 
 public class MainActivity2 extends AppCompatActivity {
@@ -168,21 +172,7 @@ public class MainActivity2 extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 searchString=query;
                 //here enter code so query is add to logged in user history
-                RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentUserLocation()); //change to current location of user
-                RoomGraph.RoomRepresent destination=g.getRoomByName(query);
-                if (destination==null){
-                    showDialogRoomDoesntFound();
-                }
-                else{
-                    Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(currentLocation,destination));
-                    Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
-                    Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
-                    Model.instance.addRoomToHistoryPlacesByUserMail(currentUser.getEmail(),destination);
-
-                }
-                instructionTV = findViewById(R.id.instruction_map_fragment);
-                instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
-                drawPath();
+                startNavigation(query);
                 return true;
             }
         };
@@ -236,7 +226,26 @@ public class MainActivity2 extends AppCompatActivity {
         return true;
     }
 
+    public void startNavigation(String navTo){
+        RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentUserLocation()); //change to current location of user
+        RoomGraph.RoomRepresent destination=g.getRoomByName(navTo);
+        if (destination==null){
+            showDialogRoomDoesntFound();
+        }
+        else{
+            Log.d("TAGLiron1", "onCreate: " + NavAlg.instance.Dijkstra(currentLocation,destination));
+            Log.d("TAGLiron2",""+NavAlg.instance.arrayListOfRooms());
+            Log.d("TAGLiron3",""+NavAlg.instance.arrayListOfInstruction());
+            Model.instance.addRoomToHistoryPlacesByUserMail(currentUser.getEmail(),destination);
 
+        }
+        instructionTV = findViewById(R.id.instruction_map_fragment);
+        instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
+
+        if(!currentUser.isBlind()) {
+            drawPath();
+        }else readInstructions();
+    }
     private void showDialogRoomDoesntFound() {
         DialogFragment newFragment = new DialogRoomNotFound();
         newFragment.show(getSupportFragmentManager(), "RoomNotFound");
@@ -250,6 +259,19 @@ public class MainActivity2 extends AppCompatActivity {
             drawPolylineBetween2Rooms(
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i + 1)));
+        }
+        //readInstructions();
+    }
+
+    private void readInstructions() {
+        TextToSpeech textToSpeech = MapsFragment.textToSpeech;
+        for (int i=0;i<NavAlg.instance.arrayListOfInstruction().size();i++){
+            textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(i).toString(),TextToSpeech.QUEUE_FLUSH,null);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -265,6 +287,9 @@ public class MainActivity2 extends AppCompatActivity {
         polylineLinkedList.add(polyline);
         Log.d("drawPath","draw polyline between "+roomA.getRoom()+" and "+roomB.getRoom());
 
+    }
+    public void setupAPI(UserLocationAPI api){
+        userLocationAPI = api;
     }
 
     public void navigateToRoomFromOtherPage(String destRoom){
