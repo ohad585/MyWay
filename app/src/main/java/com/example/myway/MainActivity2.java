@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myway.Functions.UserLocationAPI;
@@ -57,6 +58,7 @@ public class MainActivity2 extends AppCompatActivity {
     User currentUser;//if user is logged in
     private TextView instructionTV;
     private LinkedList <Polyline> polylineLinkedList=new LinkedList<>();
+    Button stopNavBtn;
 
 
     private final static int REQUEST_ENABLE_BT = 1;
@@ -84,6 +86,7 @@ public class MainActivity2 extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navCtrl);
         editsearch = (SearchView) findViewById(R.id.menu_app_bar_search);
         handleIntent(getIntent());
+
         g = new RoomGraph();
         Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
             @Override
@@ -227,6 +230,9 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     public void startNavigation(String navTo){
+
+        MapsFragment.showStopBtn();
+
         RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentUserLocation()); //change to current location of user
         RoomGraph.RoomRepresent destination=g.getRoomByName(navTo);
         if (destination==null){
@@ -246,15 +252,26 @@ public class MainActivity2 extends AppCompatActivity {
             drawPath();
         }else readInstructions();
     }
+    public void stopNavigation(){
+        MapsFragment.hideStopBtn();
+        if (currentUser.isBlind()){
+            TextToSpeech textToSpeech = MapsFragment.textToSpeech;
+            textToSpeech.stop();
+        }else removePolylines();
+    }
+
+    private void removePolylines(){
+        for(int i = 0; i<polylineLinkedList.size(); i++){
+            polylineLinkedList.get(i).setVisible(false);
+            polylineLinkedList.get(i).remove();
+        }
+    }
     private void showDialogRoomDoesntFound() {
         DialogFragment newFragment = new DialogRoomNotFound();
         newFragment.show(getSupportFragmentManager(), "RoomNotFound");
     }
     private void drawPath() {
-        for(int i = 0; i<polylineLinkedList.size(); i++){
-            polylineLinkedList.get(i).setVisible(false);
-            polylineLinkedList.get(i).remove();
-        }
+        removePolylines();
         for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 1; i++) {
             drawPolylineBetween2Rooms(
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),

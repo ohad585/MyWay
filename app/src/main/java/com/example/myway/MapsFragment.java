@@ -59,6 +59,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private final int CAMERA_ZOOM = 19;
     Bluetooth bleInterface;
     private Button micBtn;
+    private static Button stopNavBtn;
     public static GoogleMap googleMap;
     private TextView instructionTV;
     private RoomGraph g;
@@ -80,6 +81,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         instructionTV = view.findViewById(R.id.instruction_map_fragment);
         mapView = view.findViewById(R.id.map);
         micBtn = view.findViewById(R.id.maps_mic_btn);
+        stopNavBtn = view.findViewById(R.id.maps_stop_nav_btn);
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -88,6 +90,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                     // To Choose language of speech
                     textToSpeech.setLanguage(Locale.UK);
                 }
+            }
+        });
+
+        stopNavBtn.setVisibility(View.INVISIBLE);
+        stopNavBtn.setClickable(false);
+        stopNavBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity2)(getActivity())).stopNavigation();
             }
         });
 
@@ -106,6 +117,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
 
         return view;
+    }
+
+    public static void showStopBtn(){
+        stopNavBtn.setClickable(true);
+        stopNavBtn.setVisibility(View.VISIBLE);
+    }
+
+    public static void hideStopBtn(){
+        stopNavBtn.setVisibility(View.INVISIBLE);
+        stopNavBtn.setClickable(false);
     }
 
     private void preSetup() {
