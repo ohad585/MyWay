@@ -21,6 +21,14 @@ public class Model {
     MutableLiveData<LoadingState> historyPlacesForUserLoadingState = new MutableLiveData<LoadingState>();
 
 
+    public interface UpdateUserByEmailListener{
+        void onComplete();
+    }
+    public void updateUserByEmail(String email, String name, String phone, String pass,String oldPass,UpdateUserByEmailListener listener) {
+     modelFirebase.updateUserByEmail(email,name,phone,pass,oldPass,listener);
+    }
+
+
     public enum LoadingState {
         loading,
         loaded

@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/anton"
-        android:text="Mail address"
+        android:text="Email"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -82,35 +82,27 @@
 
     <TextView
         android:id="@+id/profile_mail_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
         android:fontFamily="@font/anton"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/profile_mail_tv"
-        app:layout_constraintStart_toStartOf="@+id/profile_name_info" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/profile_name_info"
+        app:layout_constraintTop_toTopOf="@+id/profile_mail_tv" />
 
     <TextView
         android:id="@+id/profile_phone_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
         android:fontFamily="@font/anton"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/profile_phone_tv"
-        app:layout_constraintStart_toStartOf="@+id/profile_mail_info" />
-
-    <Button
-        android:id="@+id/profile_editPss_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:backgroundTint="#D51B2FA3"
-        android:fontFamily="@font/anton"
-        android:text="edit password"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/profile_logo"
-        app:layout_constraintStart_toStartOf="@+id/profile_logo"
-        app:layout_constraintTop_toBottomOf="@+id/profile_phone_tv" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_phone_tv"
+        app:layout_constraintTop_toTopOf="@+id/profile_phone_tv" />
 
     <Button
         android:id="@+id/profile_editDetails_btn"
@@ -122,10 +114,9 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profile_editPss_btn"
-        app:layout_constraintHorizontal_bias="0.588"
-        app:layout_constraintStart_toStartOf="@+id/profile_editPss_btn"
-        app:layout_constraintTop_toBottomOf="@+id/profile_editPss_btn"
-        app:layout_constraintVertical_bias="0.152" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_phone_tv"
+        app:layout_constraintVertical_bias="0.837" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

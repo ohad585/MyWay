@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/log_in_fragment">
+    app:startDestination="@id/home_page_fragment">
     <fragment
         android:id="@+id/home_page_fragment"
         android:name="com.example.myway.home_page_fragment"
@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_home_page_fragment_to_log_in_fragment"
             app:destination="@id/log_in_fragment" />
+        <action
+            android:id="@+id/action_home_page_fragment_to_mapSelectFragment"
+            app:destination="@id/mapSelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/regrister_fragment"

@@ -19,6 +19,9 @@
         android:name="com.example.myway.personal_page_fragment"
         android:label="Personal Page"
         tools:layout="@layout/personal_page_fragment" >
+        <action
+            android:id="@+id/action_personal_page_fragment_to_editUserInfoFragment"
+            app:destination="@id/editUserInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/favorite_places_fragment"
@@ -63,4 +66,21 @@
         android:label="fragment_report_fragment"
         tools:layout="@layout/report_fragment" />
     <action android:id="@+id/action_global_report_fragment" app:destination="@id/fragment_report" />
+    <fragment
+        android:id="@+id/editUserInfoFragment"
+        android:name="com.example.myway.EditUserInfoFragment"
+        android:label="EditUserInfoFragment" >
+        <argument
+            android:name="userName"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+        <argument
+            android:name="phone"
+            app:argType="string" />
+    </fragment>
 </navigation>

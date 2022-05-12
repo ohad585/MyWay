@@ -74,6 +74,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        instructionTV = view.findViewById(R.id.instruction_map_fragment);
         mapView = view.findViewById(R.id.map);
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -114,9 +115,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         if(myUser.isBlind()){
             //User Is Blind
             instructionTV.setVisibility(View.INVISIBLE);
-                mapView.setVisibility(View.INVISIBLE);
-                mapView.setClickable(false);
-                micBtn.setOnClickListener(new View.OnClickListener() {
+            mapView.setVisibility(View.INVISIBLE);
+            mapView.setClickable(false);
+            micBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
                 {

@@ -8,7 +8,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,8 +28,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 public class ModelFirebase {
@@ -373,6 +377,45 @@ public class ModelFirebase {
                 .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
                 });
+
+    }
+
+    public void updateUserByEmail(String email, String name, String phone, String pass,String oldPass, Model.UpdateUserByEmailListener listener) {
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(email, oldPass);
+        mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+
+                    mAuth.getCurrentUser().updatePassword(pass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TAG", "Password updated");
+                                Map<String,Object> data = new HashMap<>();
+                                data.put("userName",name);
+                                data.put("password",pass);
+                                data.put("phone",phone);
+                                db.collection("users").document(email).update(data)
+                                        .addOnSuccessListener((successListener) -> {
+                                            Log.d("TAG", "add room to HistoryPlaces success");
+                                            listener.onComplete();
+                                        })
+                                        .addOnFailureListener((e) -> {
+                                            Log.d("TAG", e.getMessage());
+                                        });
+
+                            } else {
+                                Log.d("TAG", "Error password not updated");
+                            }
+                        }
+                    });
+
+
+                }
+            }
+        });
 
     }
 }
