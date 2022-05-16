@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     public static TextToSpeech textToSpeech;
     private User myUser;
     View mapView;
+    private ImageView center_on_user;
 
 
 
@@ -82,6 +84,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mapView = view.findViewById(R.id.map);
         micBtn = view.findViewById(R.id.maps_mic_btn);
         stopNavBtn = view.findViewById(R.id.maps_stop_nav_btn);
+        center_on_user = view.findViewById(R.id.maps_center_on_user_img);
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -93,6 +96,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
+        center_on_user.setClickable(true);
+        center_on_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "onClick: CENTER ON IMAGE CLICKED");
+                LatLng temp = null;
+                temp = userLocationAPI.getCurrentUserLocation();
+                if(temp == null){
+                    temp = myMap.getLatLng();
+                }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
+
+            }
+        });
         stopNavBtn.setVisibility(View.INVISIBLE);
         stopNavBtn.setClickable(false);
         stopNavBtn.setOnClickListener(new View.OnClickListener() {
@@ -128,37 +145,41 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         stopNavBtn.setVisibility(View.INVISIBLE);
         stopNavBtn.setClickable(false);
     }
+    private void blindSetup(){
+        instructionTV = view.findViewById(R.id.instruction_map_fragment);
+        center_on_user.setVisibility(View.INVISIBLE);
+        center_on_user.setClickable(false);
+        instructionTV.setVisibility(View.INVISIBLE);
+        mapView.setVisibility(View.INVISIBLE);
+        mapView.setClickable(false);
+        micBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent
+                        = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                        Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+                }
+                catch (Exception e) {
+                    Toast.makeText(getContext(), " " + e.getMessage(),
+                                    Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
+    }
 
     private void preSetup() {
         if(myUser.isBlind()){
             //User Is Blind
-            instructionTV = view.findViewById(R.id.instruction_map_fragment);
-
-            instructionTV.setVisibility(View.INVISIBLE);
-            mapView.setVisibility(View.INVISIBLE);
-            mapView.setClickable(false);
-            micBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v)
-                {
-                    Intent intent
-                            = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
-                            Locale.getDefault());
-                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
-
-                    try {
-                        startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-                    }
-                    catch (Exception e) {
-                        Toast.makeText(getContext(), " " + e.getMessage(),
-                                        Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-            });
+            blindSetup();
         }else {
             //User can see
             micBtn.setClickable(false);

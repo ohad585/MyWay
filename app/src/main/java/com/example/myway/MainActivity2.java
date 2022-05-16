@@ -233,7 +233,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         MapsFragment.showStopBtn();
 
-        RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentUserLocation()); //change to current location of user
+        RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentRoom()); //change to current location of user
         RoomGraph.RoomRepresent destination=g.getRoomByName(navTo);
         if (destination==null){
             showDialogRoomDoesntFound();
@@ -318,7 +318,7 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
         userLocationAPI=MapsFragment.getUserLocationAPI();
-        String currentLoc=userLocationAPI.getCurrentUserLocation();
+        String currentLoc=userLocationAPI.getCurrentRoom();
         RoomGraph.RoomRepresent currentLocation=g.getRoomByName(currentLoc); //change to current location of user
         RoomGraph.RoomRepresent destination=g.getRoomByName(destRoom);
         if (destination==null){

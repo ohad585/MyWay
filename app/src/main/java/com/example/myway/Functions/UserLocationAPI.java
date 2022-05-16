@@ -39,6 +39,7 @@ public class UserLocationAPI {
     private Resources appRes;
     private Marker userMarker;
     User currentUser;
+    private String currentRoom;
 
 
     private final LatLng SAMISHAMOON = new LatLng(31.80693, 34.65828);
@@ -146,6 +147,7 @@ public class UserLocationAPI {
                         tempx=iBeacon.getLatitude();
                         tempy =iBeacon.getLongitude();
                         tempr = iBeaconsInRange.get(keys.get(i)).getDistance();
+                        currentRoom = iBeacon.getName();
                         break;
                     }
                 }
@@ -229,10 +231,12 @@ public class UserLocationAPI {
     }
 
     //check it when beacon is on
-    public String getCurrentUserLocation(){
-        Log.d("TAGAPI"," "+ userLocationByRoom);
-        return "163";
+    public LatLng getCurrentUserLocation(){
+        return userLocation;
     }
 
+    public String getCurrentRoom(){
+        return currentRoom;
+    }
 
 }

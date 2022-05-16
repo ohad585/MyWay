@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/regrister_fragment">
+    app:startDestination="@id/log_in_fragment">
     <fragment
         android:id="@+id/home_page_fragment"
         android:name="com.example.myway.home_page_fragment"
