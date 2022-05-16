@@ -77,37 +77,40 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView6"
         app:srcCompat="@drawable/cafeteria_icon" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <CheckBox
+        android:id="@+id/mapkey_synagogue_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:text="synagogue"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintBottom_toTopOf="@+id/mapkey_stairs_cb"
+        app:layout_constraintStart_toStartOf="@+id/mapkey_bench_cb"
+        app:layout_constraintTop_toBottomOf="@+id/mapkey_bench_cb" />
 
-    <TextView
-        android:id="@+id/textView"
+    <CheckBox
+        android:id="@+id/mapkey_bench_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="40dp"
+        android:minHeight="48dp"
         android:text="bench "
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/mapkey_synagogue_cb"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/home_logo" />
 
-    <TextView
-        android:id="@+id/textView4"
+    <CheckBox
+        android:id="@+id/mapkey_garbage_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:text="garbage"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintStart_toStartOf="@+id/mapkey_stairs_cb"
+        app:layout_constraintTop_toBottomOf="@+id/mapkey_stairs_cb" />
 
     <TextView
         android:id="@+id/textView5"
@@ -116,29 +119,31 @@
         android:layout_marginStart="4dp"
         android:text="current location"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView6"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintBottom_toTopOf="@+id/mapkey_cafeteria_cb"
+        app:layout_constraintStart_toStartOf="@+id/mapkey_garbage_cb"
+        app:layout_constraintTop_toBottomOf="@+id/mapkey_garbage_cb" />
 
-    <TextView
-        android:id="@+id/textView6"
+    <CheckBox
+        android:id="@+id/mapkey_cafeteria_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:text="cafeteria"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <TextView
-        android:id="@+id/textView3"
+    <CheckBox
+        android:id="@+id/mapkey_stairs_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:text="stairs"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintBottom_toTopOf="@+id/mapkey_garbage_cb"
+        app:layout_constraintStart_toStartOf="@+id/mapkey_synagogue_cb"
+        app:layout_constraintTop_toBottomOf="@+id/mapkey_synagogue_cb" />
 
     <TextView
         android:id="@+id/textView7"
@@ -150,5 +155,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/home_logo" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
