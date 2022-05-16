@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myway.Model.Model;
 import com.example.myway.Model.User;
@@ -50,6 +51,7 @@ public class log_in_fragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_log_in_fragment_to_mapSelectFragment);
             }
             else {
+                Toast.makeText(getActivity(),"Login Failed try again",Toast.LENGTH_LONG).show();
                 Log.d("TAG", "loginUser: Failed");
             }
         });

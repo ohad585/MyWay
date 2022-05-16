@@ -107,17 +107,16 @@
         android:id="@+id/reg_reg_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
         android:backgroundTint="#D51B2FA3"
         android:fontFamily="@font/anton"
         android:text="Register"
         android:textColor="@color/white"
         android:textColorHint="#F4F4F4"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/reg_cncl_btn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reg_email_tv" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/reg_phone_tv"
@@ -170,4 +169,18 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/reg_phone_tv"
         app:layout_constraintTop_toBottomOf="@+id/reg_phone_tv" />
+
+    <CheckBox
+        android:id="@+id/reg_is_blind_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/anton"
+        android:minHeight="48dp"
+        android:text="Blind"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/reg_reg_btn"
+        app:layout_constraintStart_toStartOf="@+id/reg_email_tv"
+        app:layout_constraintTop_toBottomOf="@+id/reg_email_tv"
+        app:layout_constraintVertical_bias="0.124" />
 </androidx.constraintlayout.widget.ConstraintLayout>

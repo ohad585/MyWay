@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.myway.Model.Model;
@@ -22,6 +23,7 @@ public class regrister_fragment extends Fragment {
     TextView pass_et;
     TextView phone_et;
     TextView mail_et;
+    CheckBox blind_cb;
     Button reg_btn;
     Button cncl_btn;
     View view;
@@ -37,6 +39,7 @@ public class regrister_fragment extends Fragment {
         mail_et=view.findViewById(R.id.reg_email_et);
         reg_btn=view.findViewById(R.id.reg_reg_btn);
         cncl_btn=view.findViewById(R.id.reg_cncl_btn);
+        blind_cb = view.findViewById(R.id.reg_is_blind_cb);
 
         reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +66,7 @@ public class regrister_fragment extends Fragment {
         String phone=phone_et.getText().toString();
         String pass=pass_et.getText().toString();
         String mail=mail_et.getText().toString();
+        boolean blind = blind_cb.isChecked();
 
         if (name.matches("")|| phone.matches("") || pass.matches("")|| mail.matches("") ){
             AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
@@ -77,7 +81,7 @@ public class regrister_fragment extends Fragment {
             alertDialog.show();
         }
         else {
-            User user = new User(name, pass, phone, mail,true);
+            User user = new User(name, pass, phone, mail,blind);
 
             Model.instance.addUser(user, (boolean flag) -> {
                 Log.d("TAG", Boolean.toString(flag));

@@ -20,16 +20,17 @@
         android:id="@+id/log_in_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/anton"
-        android:text="User Mail"
+        android:text="Email"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintHorizontal_bias="0.019"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_in_logo"
-        app:layout_constraintVertical_bias="0.033" />
+        app:layout_constraintVertical_bias="0.032" />
 
     <TextView
         android:id="@+id/log_in_password_tv"
@@ -40,8 +41,6 @@
         android:text="Password"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/log_in_name_tv"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/log_in_name_tv"
         app:layout_constraintTop_toBottomOf="@+id/log_in_name_tv"
         app:layout_constraintVertical_bias="0.0" />
