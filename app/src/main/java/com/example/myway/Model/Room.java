@@ -25,13 +25,18 @@ public class Room {
     static final String BOT_RIGHT_Y="BOT_RIGHT_Y";
     static final String DETAILS = "DETAILS";
     static final String FILL_COLOR="FILL_COLOR";
+    static final String FLOOR="FLOOR";
+    static final String EXTRA_DETAILS = "EXTRA_DETAILS";
+
     private LatLng topLeft;
     private LatLng topRight;
     private LatLng botRight;
     private LatLng botLeft;
-    private int fillColor = 0x7F00FF00;
+    private int fillColor = 0xffd62d20;
     private String details;
     private boolean isDeleted;
+    private Long floor;
+    private String extraDetails;
 
     public Room(){
     }
@@ -91,6 +96,20 @@ public class Room {
     public void setTopRight(LatLng topRight) {
         this.topRight = topRight;
     }
+    public long getFloor() {
+        return floor;
+    }
+    public void setFloor(long floor) {
+        this.floor = floor;
+    }
+
+    public String getExtraDetails() {
+        return this.extraDetails;
+    }
+
+    public void setExtraDetails(String extraDetails) {
+        this.extraDetails = extraDetails;
+    }
 
     public PolygonOptions retPolygonOptions(){
         return new PolygonOptions().add(topLeft,topRight,botRight,botLeft)
@@ -109,6 +128,8 @@ public class Room {
         json.put(BOT_LEFT_X, botLeft.latitude);
         json.put(BOT_LEFT_Y, botLeft.longitude);
         json.put(DETAILS,details);
+        json.put(FLOOR,floor);
+        json.put(EXTRA_DETAILS,extraDetails);
         //json.put(FILL_COLOR,fillColor);
         return json;
     }
@@ -118,12 +139,16 @@ public class Room {
         if (det == null){
             return null;
         }
+        Long floor = (Long)json.get(FLOOR);
         LatLng tl = new LatLng((double)json.get(TOP_LEFT_X),(double) json.get(TOP_LEFT_Y));
         LatLng tr = new LatLng((double)json.get(TOP_RIGHT_X),(double) json.get(TOP_RIGHT_Y));
         LatLng br = new LatLng((double)json.get(BOT_RIGHT_X),(double) json.get(BOT_RIGHT_Y));
         LatLng bl = new LatLng((double)json.get(BOT_LEFT_X),(double) json.get(BOT_LEFT_Y));
+        String extra = (String)json.get(EXTRA_DETAILS);
         //int fc = (int)json.get(FILL_COLOR);
         Room r = new Room(tl,tr,br,bl,det);
+        r.setFloor(floor);
+        r.setExtraDetails(extra);
         return r;
     }
 

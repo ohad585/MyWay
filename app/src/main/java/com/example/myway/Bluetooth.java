@@ -30,10 +30,9 @@ public class Bluetooth {
     private HashMap<String, BluetoothRep> devicesFound;
     private ReentrantLock devicesFoundLock;
 
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 2000;
-    private static final long SCAN_INTERVAL = 3000;
-    private static final long RESET_INTERVAL = 20000;
+    private static final long SCAN_PERIOD = 1000;
+    private static final long SCAN_INTERVAL = 5000;
+    private static final long RESET_INTERVAL = 10000;
 
 
     private final BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {

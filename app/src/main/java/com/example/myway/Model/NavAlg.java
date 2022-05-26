@@ -47,6 +47,7 @@ public class NavAlg  {
     public String Dijkstra(RoomGraph.RoomRepresent start, RoomGraph.RoomRepresent destination){
         arrayListOfRooms=new ArrayList<>();
         arrayListOfInstruction=new ArrayList<>();
+        g=new RoomGraph();
         g.setAlldistance();
         String text = "Djikstra :\n";
         // d[start]=0 (other vertex's d_value is infinity by default), S={0} , Q = vertex
@@ -105,12 +106,17 @@ public class NavAlg  {
                 stack.push(current);
                 text2+=current.getRoom()+" ";
                 if(current.parent!=null){
-                    RoomGraph.Edge currentEdge=g.findEdgeByTwoRooms(current,current.parent);
-                    arrayListOfInstructionAdd(pathString);
+                    RoomGraph.Edge currentEdge=g.findEdgeByTwoRooms(current.parent,current);
                     pathString+=currentEdge.getInstruction()+"\n";
+                    arrayListOfInstructionAdd(pathString);
+                }
+                if(current.getRoom().matches(start.getRoom())){
+                    arrayListOfRooms.add(current.getRoom());
+                    break;
                 }
                 arrayListOfRooms.add(current.getRoom());
                 current = current.parent;
+
 
             }
             double path_length = destination.d_value;
@@ -118,6 +124,15 @@ public class NavAlg  {
             text+=" Nr.Hops:"+(stack.size()-1)+" Path length: "+String.format( "%.2f", path_length )+ "ns";
         }//fund else per ekzistencen e path
         Log.d("TAG",""+pathString);
+
+        //Collections.reverse(arrayListOfInstruction);
+        String[] temp ;
+        temp=(arrayListOfInstruction.get(arrayListOfInstruction.size()-1)).split("\n");
+        arrayListOfInstruction = new ArrayList<>();
+        for(int i= temp.length-1;i>=0;i--){
+            arrayListOfInstruction.add(temp[i]);
+        }
+
         return text+"\n"+text2;
     }
 

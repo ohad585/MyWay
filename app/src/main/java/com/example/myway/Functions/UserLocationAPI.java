@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -40,6 +41,8 @@ public class UserLocationAPI {
     private Marker userMarker;
     User currentUser;
     private String currentRoom;
+    private Handler handler ;
+    public static UserLocationAPI instance = null;
 
 
     private final LatLng SAMISHAMOON = new LatLng(31.80693, 34.65828);
@@ -47,30 +50,31 @@ public class UserLocationAPI {
 
 
     public UserLocationAPI(GoogleMap gm, Bluetooth ble, Resources resources){
-        appRes = resources;
-        googleMap=gm;
-        bleAPI = ble;
-        userLocation = SAMISHAMOON;
-        setUserIcon();
-        Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
-            @Override
-            public void onComplete(List<Room> roomList) {
-                allRooms=roomList;
-                Model.instance.getAllBeacons(new Model.GetAllBeaconsListener() {
-                    @Override
-                    public void onComplete(List<IBeacon> beacons) {
-                        allBeacons = beacons;
-                        init();
-                    }
-                });
-            }
-        });
-        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
-            @Override
-            public void onComplete(User user) {
-                currentUser=user;
-            }
-        });
+            handler = new Handler();
+            appRes = resources;
+            googleMap = gm;
+            bleAPI = ble;
+            userLocation = SAMISHAMOON;
+            setUserIcon();
+            Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
+                @Override
+                public void onComplete(List<Room> roomList) {
+                    allRooms = roomList;
+                    Model.instance.getAllBeacons(new Model.GetAllBeaconsListener() {
+                        @Override
+                        public void onComplete(List<IBeacon> beacons) {
+                            allBeacons = beacons;
+                            init();
+                        }
+                    });
+                }
+            });
+            Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+                @Override
+                public void onComplete(User user) {
+                    currentUser = user;
+                }
+            });
 
     }
 
@@ -105,13 +109,24 @@ public class UserLocationAPI {
             @Override
             public void onComplete(HashMap<String, BluetoothRep> devices) {
                 iBeaconsInRange = devices;
-                calcUserLocationNearestBeacon();
+                checkForLocation();
             }
         });
     }
 
+    public void checkForLocation(){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                calcUserLocationNearestBeacon();
+                init();
+            }
+        },2000);
+    }
+
     @SuppressLint("MissingPermission")
     private void calcUserLocationNearestBeacon(){
+        IBeacon tempBeacon = null;
         if(iBeaconsInRange == null){
             Log.d("TAG", "calcUserLocation: iBeaconsInRange is null ");
             return;
@@ -128,6 +143,7 @@ public class UserLocationAPI {
                     double y = beacon.getLongitude();
                     userLocation = new LatLng(y,x);
                     userLocationByRoom=beacon.getName();
+                    currentRoom = beacon.getName();
                     updateUserIconLocation();
                     return;
                 }
@@ -147,7 +163,13 @@ public class UserLocationAPI {
                         tempx=iBeacon.getLatitude();
                         tempy =iBeacon.getLongitude();
                         tempr = iBeaconsInRange.get(keys.get(i)).getDistance();
-                        currentRoom = iBeacon.getName();
+                        if(tempr<r){
+                            x=tempx;
+                            y=tempy;
+                            r=tempr;
+                            tempBeacon = iBeacon;
+                            currentRoom = iBeacon.getName();
+                        }
                         break;
                     }
                 }
@@ -159,6 +181,9 @@ public class UserLocationAPI {
             }
             if(x!=1 && y!=1){
                 userLocation = new LatLng(y,x);
+                if(tempBeacon!=null) {
+                    currentRoom = tempBeacon.getName();
+                }else Log.d("TAG", "calcUserLocationNearestBeacon: CURRENT ROOM WAS NULL");
                 updateUserIconLocation();
             }else Log.d("TAG", "calcUserLocationNearestBeacon: X,Y didnt changed");
         }

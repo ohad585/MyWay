@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -72,6 +73,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     View mapView;
     private ImageView center_on_user;
     private List<Marker> markers;
+    private int currentFloor;
+
 
 
 
@@ -81,7 +84,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_maps, container, false);
-
         instructionTV = view.findViewById(R.id.instruction_map_fragment);
         mapView = view.findViewById(R.id.map);
         micBtn = view.findViewById(R.id.maps_mic_btn);
@@ -102,13 +104,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         center_on_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "onClick: CENTER ON IMAGE CLICKED");
-                LatLng temp = null;
-                temp = userLocationAPI.getCurrentUserLocation();
-                if(temp == null){
-                    temp = myMap.getLatLng();
-                }
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
+//                Log.d("TAG", "onClick: CENTER ON IMAGE CLICKED");
+//                LatLng temp = null;
+//                temp = userLocationAPI.getCurrentUserLocation();
+//                if(temp == null){
+//                    temp = myMap.getLatLng();
+//                }
+//                googleMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
 
             }
         });
@@ -241,14 +243,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onComplete(List<Room> roomList) {
                 for(Room r:roomList){
-                    Polygon p = googleMap.addPolygon(r.retPolygonOptions());
-                    p.setClickable(true);
-                    p.setTag(r.getDetails());
+                    if(r.getFloor()==currentFloor) {
+                        Polygon p = googleMap.addPolygon(r.retPolygonOptions());
+                        p.setClickable(true);
+                        p.setTag(r.getDetails());
+
 //                    Marker marker = googleMap.addMarker(
 //                            new MarkerOptions()
 //                                    .position((LatLng) p.getPoints().get(0))
 //                                    .title(r.getDetails()));
-                    polygonList.add(p);
+                        polygonList.add(p);
+                    }
                 }
                 drawExtraMarkers(true);
             }
@@ -257,118 +262,119 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void drawExtraMarkers(boolean first){
-        markers=new LinkedList<>();
-        Drawable circleDrawable;
-        BitmapDescriptor markerIcon;
-        if(MyApplication.mapKeySettings[2]) {
-            circleDrawable = getResources().getDrawable(R.drawable.stairs);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker stairsMarker = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80722, 34.65782))
-                    .title("stairs")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(stairsMarker);
-        }
-        if(MyApplication.mapKeySettings[1]) {
-            circleDrawable = getResources().getDrawable(R.drawable.magen_david_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker synagogueMarker = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80713, 34.65805))
-                    .title("synagogue")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(synagogueMarker);
-        }
-        if(MyApplication.mapKeySettings[4]) {
-            circleDrawable = getResources().getDrawable(R.drawable.cafeteria_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker cafeteria = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80719, 34.65808))
-                    .title("cafeteria")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(cafeteria);
-        }
-        if(MyApplication.mapKeySettings[3]) {
-            circleDrawable = getResources().getDrawable(R.drawable.garbage_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker garbage = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80716, 34.65799))
-                    .title("garbage")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(garbage);
-        }
-        if(MyApplication.mapKeySettings[0]) {
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench1 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80704, 34.65821))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench1);
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench2 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80709, 34.65823))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench2);
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench3 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80705, 34.6581))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench3);
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench4 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.8069, 34.65847))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench4);
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench5 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80705, 34.6581))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench5);
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench6 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80705, 34.6581))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench6);
-            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
-            markerIcon = getMarkerIconFromDrawable(circleDrawable);
-            Marker bench7 = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(31.80722, 34.65797))
-                    .title("bench")
-                    .icon(markerIcon)
-                    .anchor(0, 0)
-            );
-            markers.add(bench7);
-        }
+        Log.d("TAG", "drawExtraMarkers");
+//        markers=new LinkedList<>();
+//        Drawable circleDrawable;
+//        BitmapDescriptor markerIcon;
+//        if(MyApplication.mapKeySettings[2]) {
+//            circleDrawable = getResources().getDrawable(R.drawable.stairs);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker stairsMarker = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80722, 34.65782))
+//                    .title("stairs")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(stairsMarker);
+//        }
+//        if(MyApplication.mapKeySettings[1]) {
+//            circleDrawable = getResources().getDrawable(R.drawable.magen_david_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker synagogueMarker = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80713, 34.65805))
+//                    .title("synagogue")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(synagogueMarker);
+//        }
+//        if(MyApplication.mapKeySettings[4]) {
+//            circleDrawable = getResources().getDrawable(R.drawable.cafeteria_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker cafeteria = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80719, 34.65808))
+//                    .title("cafeteria")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(cafeteria);
+//        }
+//        if(MyApplication.mapKeySettings[3]) {
+//            circleDrawable = getResources().getDrawable(R.drawable.garbage_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker garbage = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80716, 34.65799))
+//                    .title("garbage")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(garbage);
+//        }
+//        if(MyApplication.mapKeySettings[0]) {
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench1 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80704, 34.65821))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench1);
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench2 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80709, 34.65823))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench2);
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench3 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80705, 34.6581))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench3);
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench4 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.8069, 34.65847))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench4);
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench5 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80705, 34.6581))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench5);
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench6 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80705, 34.6581))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench6);
+//            circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
+//            markerIcon = getMarkerIconFromDrawable(circleDrawable);
+//            Marker bench7 = googleMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.80722, 34.65797))
+//                    .title("bench")
+//                    .icon(markerIcon)
+//                    .anchor(0, 0)
+//            );
+//            markers.add(bench7);
+//        }
         if(first) {
             onRoomsReady();
         }

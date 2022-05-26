@@ -1,20 +1,18 @@
 package com.example.myway;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
@@ -26,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -35,16 +32,11 @@ import com.example.myway.Model.Model;
 import com.example.myway.Model.NavAlg;
 import com.example.myway.Model.RoomGraph;
 import com.example.myway.Model.User;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Objects;
-import java.util.regex.PatternSyntaxException;
 
 public class MainActivity2 extends AppCompatActivity {
     private BluetoothManager btManager;
@@ -59,7 +51,8 @@ public class MainActivity2 extends AppCompatActivity {
     private TextView instructionTV;
     private LinkedList <Polyline> polylineLinkedList=new LinkedList<>();
     Button stopNavBtn;
-
+    public String lastRoom;
+    private Handler handler ;
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
@@ -75,6 +68,7 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        handler = new Handler();
         NavHostFragment nav_host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.base_navhost2);
 
         Intent intent = getIntent();
@@ -119,7 +113,8 @@ public class MainActivity2 extends AppCompatActivity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
         bleInterface = new Bluetooth(btAdapter);
-
+        bleInterface.runScan();
+        bleInterface.resetBeaconsFound();
 
 
     }
@@ -232,7 +227,7 @@ public class MainActivity2 extends AppCompatActivity {
     public void startNavigation(String navTo){
 
         MapsFragment.showStopBtn();
-
+        lastRoom = userLocationAPI.getCurrentRoom();
         RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentRoom()); //change to current location of user
         RoomGraph.RoomRepresent destination=g.getRoomByName(navTo);
         if (destination==null){
@@ -247,11 +242,34 @@ public class MainActivity2 extends AppCompatActivity {
         }
         instructionTV = findViewById(R.id.instruction_map_fragment);
         instructionTV.setText(NavAlg.instance.arrayListOfInstruction().get(0));
-
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(lastRoom!=userLocationAPI.getCurrentRoom()){
+//                    startNavigation(navTo);
+//                }
+//                else checkforChange(navTo);
+//            }
+//        },4000);
+        checkForChange(navTo);
         if(!currentUser.isBlind()) {
             drawPath();
+            readInstructions();
         }else readInstructions();
     }
+    public void checkForChange(String navTo){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(lastRoom!=userLocationAPI.getCurrentRoom()){
+                    stopNavigation();
+                    startNavigation(navTo);
+                }
+                else checkForChange(navTo);
+            }
+        },2000);
+    }
+
     public void stopNavigation(){
         MapsFragment.hideStopBtn();
         if (currentUser.isBlind()){
@@ -271,25 +289,20 @@ public class MainActivity2 extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "RoomNotFound");
     }
     private void drawPath() {
+
         removePolylines();
         for (int i = 0; i < NavAlg.instance.arrayListOfRooms().size() - 1; i++) {
             drawPolylineBetween2Rooms(
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i)),
                     g.getRoomByName(NavAlg.instance.arrayListOfRooms().get(i + 1)));
         }
-        //readInstructions();
+
+
     }
 
     private void readInstructions() {
         TextToSpeech textToSpeech = MapsFragment.textToSpeech;
-        for (int i=0;i<NavAlg.instance.arrayListOfInstruction().size();i++){
-            textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(i).toString(),TextToSpeech.QUEUE_FLUSH,null);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        textToSpeech.speak(NavAlg.instance.arrayListOfInstruction().get(0).toString(),TextToSpeech.QUEUE_FLUSH,null);
     }
 
     private void drawPolylineBetween2Rooms(RoomGraph.RoomRepresent roomA, RoomGraph.RoomRepresent roomB) {

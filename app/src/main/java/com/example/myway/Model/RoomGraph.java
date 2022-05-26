@@ -144,8 +144,8 @@ public class RoomGraph {
         edges.add(new Edge("167","J1","Go straight"));
         edges.add(new Edge("J1","167","Go straight"));
 
-        edges.add(new Edge("166C","J1","Turn Left"));
-        edges.add(new Edge("J1","166C","Turn right"));
+//        edges.add(new Edge("166C","J1","Turn Left"));
+//        edges.add(new Edge("J1","166C","Turn right"));
 
         edges.add(new Edge("J1","J2","Turn right"));
         edges.add(new Edge("J2","J1","Turn left"));
@@ -161,8 +161,8 @@ public class RoomGraph {
         edges.add(new Edge("166A","166C","N"));
         edges.add(new Edge("166C","166A","N"));
 
-        edges.add(new Edge("166A","165","Turn left"));
-        edges.add(new Edge("165","166A","Turn right"));
+        edges.add(new Edge("166A","165","Turn left into the building"));
+        edges.add(new Edge("165","166A","Turn right out from building"));
 
         edges.add(new Edge("166B","165","N"));
         edges.add(new Edge("165","166B","N"));
@@ -179,8 +179,8 @@ public class RoomGraph {
         edges.add(new Edge("165","162","N"));
         edges.add(new Edge("162","165","N"));
 
-        edges.add(new Edge("165","161","N"));
-        edges.add(new Edge("161","165","N"));
+        edges.add(new Edge("165","161","Go right"));
+        edges.add(new Edge("161","165","Go left"));
 
         edges.add(new Edge("164","160","N"));
         edges.add(new Edge("160","164","N"));
@@ -203,8 +203,8 @@ public class RoomGraph {
         edges.add(new Edge("162","161","N"));
         edges.add(new Edge("161","162","N"));
 
-        edges.add(new Edge("161","160","N"));
-        edges.add(new Edge("160","161","N"));
+        edges.add(new Edge("161","160","Go straight"));
+        edges.add(new Edge("160","161","Go straight"));
 
 
     }
@@ -240,21 +240,26 @@ public class RoomGraph {
         return null;
     }
 
-    public void calculateDistance(RoomRepresent room1, RoomRepresent room2){
+    public double calculateDistance(RoomRepresent room1, RoomRepresent room2){
         double room1x = room1.getDoorX();
         double room1y = room1.getDoorY();
         double room2x = room2.getDoorX();
         double room2y = room2.getDoorY();
         double distance=Math.sqrt((room2y - room1y) * (room2y - room1y) + (room2x - room1x) * (room2x - room1x));
         Edge edge=findEdgeByTwoRooms(room1,room2);
-        edge.setWeight(distance);
+        //edge.setWeight(distance);
         Log.d("TAGDIS",""+distance);
+        return distance;
+
     }
     public void setAlldistance(){
         for(Edge e:edges){
             RoomRepresent a=getRoomByName(e.getE1());
             RoomRepresent b=getRoomByName(e.getE2());
-            calculateDistance(a,b);
+            e.setWeight(calculateDistance(a,b));
+        }
+        for(RoomRepresent r:roomList){
+            r.discovered=false;
         }
     }
 }

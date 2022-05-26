@@ -41,6 +41,7 @@ public class DialogRoomDetails extends DialogFragment {
 
         View view = inflater.inflate(R.layout.dialog_room_details, container, false);
         TextView roomName = view.findViewById(R.id.dialog_room_details_room_name_tv);
+        TextView extraDit = view.findViewById(R.id.dialog_room_details_extra_det_tv);
         Button okBtn = view.findViewById(R.id.dialog_room_details_ok_btn);
         Button cnclBtn = view.findViewById(R.id.dialog_room_details_cncl_btn);
         Button favBtn = view.findViewById(R.id.dialog_room_details_fav_btn);
@@ -79,6 +80,7 @@ public class DialogRoomDetails extends DialogFragment {
             }
         });
         roomName.setText(r.getDetails());
+        extraDit.setText(r.getExtraDetails());
 
         return view;
     }

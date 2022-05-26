@@ -62,4 +62,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_room_detailis_head_tv" />
+
+    <TextView
+        android:id="@+id/dialog_room_details_extra_det_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_room_details_ok_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_room_details_room_name_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>
