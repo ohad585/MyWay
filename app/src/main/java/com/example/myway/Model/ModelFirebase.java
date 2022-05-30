@@ -236,17 +236,22 @@ public class ModelFirebase {
     }
     public void getCurrentUser(Model.getCurrentUserListener listener1) {
         FirebaseUser user = mAuth.getCurrentUser();
-        User usr=new User();
-        usr.setEmail(user.getEmail());
-        usr.setUid(user.getUid());
-        usr.setPhoneNum(user.getPhoneNumber());
-        usr.setUserName(user.getDisplayName());
-        getUserByUserName(usr.getEmail(), new Model.GetUserByUserNameListener() {
-            @Override
-            public void onComplete(User u) {
-                listener1.onComplete(u);
-            }
-        });
+        if(user == null){
+            listener1.onComplete(null);
+        }
+        else {
+            User usr = new User();
+            usr.setEmail(user.getEmail());
+            usr.setUid(user.getUid());
+            usr.setPhoneNum(user.getPhoneNumber());
+            usr.setUserName(user.getDisplayName());
+            getUserByUserName(usr.getEmail(), new Model.GetUserByUserNameListener() {
+                @Override
+                public void onComplete(User u) {
+                    listener1.onComplete(u);
+                }
+            });
+        }
     }
 
     public void getAllMaps(Model.GetAllMapsListener listener) {
