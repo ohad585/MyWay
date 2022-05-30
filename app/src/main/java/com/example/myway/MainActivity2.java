@@ -2,10 +2,12 @@ package com.example.myway;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import android.annotation.SuppressLint;
@@ -58,6 +60,7 @@ public class MainActivity2 extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 1;
 
     private RoomGraph g;
+    private String name;
 
 
 
@@ -72,7 +75,7 @@ public class MainActivity2 extends AppCompatActivity {
         NavHostFragment nav_host = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.base_navhost2);
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("myMapName");
+        name = intent.getStringExtra("myMapName");
         Bundle bundle = new Bundle();
         bundle.putString("myMapName", name );
         navCtrl = nav_host.getNavController();
@@ -82,15 +85,20 @@ public class MainActivity2 extends AppCompatActivity {
         handleIntent(getIntent());
 
         g = new RoomGraph();
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
             @Override
             public void onComplete(User user) {
                 currentUser=user;
+                checkPermissions();
             }
         });
 
 
-        checkPermissions();
+
     }
 
 
@@ -183,7 +191,7 @@ public class MainActivity2 extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                navCtrl.navigateUp();
+                navCtrl.navigate(R.id.action_global_mapFragment);
                 return true;
             case R.id.profile:
                 navCtrl.navigate(R.id.action_global_personal_page_fragment);
@@ -355,4 +363,13 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Bundle bundle = new Bundle();
+        bundle.putString("myMapName", name );
+        navCtrl.setGraph(R.navigation.nav_graph2,bundle);
+        NavigationUI.setupActionBarWithNavController(this, navCtrl);
+        navCtrl.navigate(R.id.action_global_mapFragment);
+    }
 }

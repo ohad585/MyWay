@@ -23,7 +23,7 @@
         android:layout_height="196dp"
         android:autoText="false"
         android:background="@drawable/custom_button"
-        android:hint="Enter your report/otimization tips here."
+        android:hint="Enter your report/optimization tips here."
         app:layout_constraintBottom_toTopOf="@+id/report_fragment_send_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

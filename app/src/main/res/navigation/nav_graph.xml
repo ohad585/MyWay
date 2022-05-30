@@ -31,8 +31,8 @@
     <fragment
         android:id="@+id/log_in_fragment"
         android:name="com.example.myway.log_in_fragment"
-        android:label="LOG IN"
-        tools:layout="@layout/log_in_fragment" >
+        android:label="Log in"
+        tools:layout="@layout/log_in_fragment">
         <action
             android:id="@+id/action_log_in_fragment_to_mapSelectFragment"
             app:destination="@id/mapSelectFragment" />
@@ -40,8 +40,8 @@
     <fragment
         android:id="@+id/mapSelectFragment"
         android:name="com.example.myway.MapSelectFragment"
-        android:label="fragment_map_select"
-        tools:layout="@layout/fragment_map_select" >
+        android:label="Map Selection"
+        tools:layout="@layout/fragment_map_select">
         <action
             android:id="@+id/action_mapSelectFragment_to_mainActivity2"
             app:destination="@id/mainActivity2" />

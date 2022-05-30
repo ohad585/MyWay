@@ -51,6 +51,7 @@ public class map_key_fragment extends Fragment {
             public void onClick(View view) {
                 Log.d("TAG", "onClick: "+ bench.isChecked());
                 MyApplication.setMapKeySettings(0,bench.isChecked());
+                MyApplication.setMapKeySettings(5,true);
             }
         });
         synagogue.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +59,7 @@ public class map_key_fragment extends Fragment {
             public void onClick(View view) {
                 Log.d("TAG", "onClick: "+ synagogue.isChecked());
                 MyApplication.setMapKeySettings(1,synagogue.isChecked());
+                MyApplication.setMapKeySettings(5,true);
             }
         });
         stairs.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +67,7 @@ public class map_key_fragment extends Fragment {
             public void onClick(View view) {
                 Log.d("TAG", "onClick: "+ stairs.isChecked());
                 MyApplication.setMapKeySettings(2,stairs.isChecked());
+                MyApplication.setMapKeySettings(5,true);
             }
         });
         garbage.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +75,7 @@ public class map_key_fragment extends Fragment {
             public void onClick(View view) {
                 Log.d("TAG", "onClick: "+ garbage.isChecked());
                 MyApplication.setMapKeySettings(3,garbage.isChecked());
+                MyApplication.setMapKeySettings(5,true);
             }
         });
         cafeteria.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +83,7 @@ public class map_key_fragment extends Fragment {
             public void onClick(View view) {
                 Log.d("TAG", "onClick: "+ cafeteria.isChecked());
                 MyApplication.setMapKeySettings(4,cafeteria.isChecked());
+                MyApplication.setMapKeySettings(5,true);
             }
         });
 

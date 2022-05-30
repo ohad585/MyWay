@@ -15,7 +15,7 @@ public class MyApplication extends Application {
     private static Context appContext;
     public static ExecutorService executorService = Executors.newFixedThreadPool(2);
     public static Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
-    public final static int MAP_KEY_SETTING_NUM = 5;//0-bench ,1-synagogue,2-stairs,3-garbage,4-cafeteria
+    public final static int MAP_KEY_SETTING_NUM = 6;//0-bench ,1-synagogue,2-stairs,3-garbage,4-cafeteria ,5-if changed
     public static boolean[] mapKeySettings = initMapKeySettings();
 
     @Override
@@ -29,6 +29,7 @@ public class MyApplication extends Application {
         for(int i=0;i<MAP_KEY_SETTING_NUM;i++){
             tempKeySettings[i]=true;
         }
+        tempKeySettings[5]=false;
         return tempKeySettings;
     }
 

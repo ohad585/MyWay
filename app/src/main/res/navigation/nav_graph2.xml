@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.example.myway.MapsFragment"
-        android:label="Map Fragment"
-        tools:layout="@layout/fragment_maps" >
+        android:label="Map"
+        tools:layout="@layout/fragment_maps">
         <argument
             android:name="myMapName"
             app:argType="string" />
@@ -51,7 +51,7 @@
     <fragment
         android:id="@+id/about_us_fragment"
         android:name="com.example.myway.about_us_fragment"
-        android:label="about_us_fragment"
+        android:label="About Us"
         tools:layout="@layout/about_us_page" />
     <action android:id="@+id/action_global_about_us_fragment" app:destination="@id/about_us_fragment" />
     <fragment
@@ -63,20 +63,20 @@
     <fragment
         android:id="@+id/application_guidelines"
         android:name="com.example.myway.application_guidelines"
-        android:label="fragment_application_guidelines"
+        android:label="Guide"
         tools:layout="@layout/app_guide_fragment" />
     <action android:id="@+id/action_global_application_guidelines" app:destination="@id/application_guidelines" />
     <fragment
         android:id="@+id/fragment_report"
         android:name="com.example.myway.report_fragment"
-        android:label="fragment_report_fragment"
+        android:label="Bug Report"
         tools:layout="@layout/report_fragment" />
     <action android:id="@+id/action_global_report_fragment" app:destination="@id/fragment_report" />
 
     <fragment
         android:id="@+id/editUserInfoFragment"
         android:name="com.example.myway.EditUserInfoFragment"
-        android:label="EditUserInfoFragment" >
+        android:label="Edit info">
         <argument
             android:name="userName"
             app:argType="string" />
