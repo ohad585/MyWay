@@ -250,7 +250,7 @@ public class Model {
 //    }
 
     public interface RegistrationByMailPassListener{
-        void onComplete();
+        void onComplete(boolean success);
     }
 
     public void regModel(String email,String pass,RegistrationByMailPassListener listener){

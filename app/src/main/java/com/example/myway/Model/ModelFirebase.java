@@ -107,13 +107,13 @@ public class ModelFirebase {
                     signInWithEmail(email, password, new Model.SignInWithEmailPassListener() {
                         @Override
                         public void onComplete(User user, boolean success) {
-                            listener.onComplete();
+                            listener.onComplete(true);
                         }
                     });
                     Log.d("Tag", "success");
                 } else {
                     Log.d("Tag", "not success", task.getException());
-
+                            listener.onComplete(false);
                 }
             }
         });
