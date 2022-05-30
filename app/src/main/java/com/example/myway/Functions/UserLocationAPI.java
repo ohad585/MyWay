@@ -261,6 +261,9 @@ public class UserLocationAPI {
     }
 
     public String getCurrentRoom(){
+        if (currentRoom==null){
+            return "167";
+        }
         return currentRoom;
     }
 
