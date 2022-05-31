@@ -46,7 +46,7 @@ public class UserLocationAPI {
 
 
     private final LatLng SAMISHAMOON = new LatLng(31.80693, 34.65828);
-    private final int ICON_SIZE = 72;
+    private final int ICON_SIZE = 120;
 
 
     public UserLocationAPI(GoogleMap gm, Bluetooth ble, Resources resources){
@@ -97,6 +97,7 @@ public class UserLocationAPI {
                 .title("user")
                 .icon(markerIcon)
                 .anchor(0, 0)
+
         );
     }
 

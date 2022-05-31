@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.myway.Model.Model;
@@ -26,6 +27,7 @@ public class regrister_fragment extends Fragment {
     CheckBox blind_cb;
     Button reg_btn;
     Button cncl_btn;
+    ProgressBar progBar;
     View view;
 
     @Override
@@ -40,7 +42,8 @@ public class regrister_fragment extends Fragment {
         reg_btn=view.findViewById(R.id.reg_reg_btn);
         cncl_btn=view.findViewById(R.id.reg_cncl_btn);
         blind_cb = view.findViewById(R.id.reg_is_blind_cb);
-
+        progBar = view.findViewById(R.id.reg_progBar);
+        progBar.setVisibility(View.INVISIBLE);
         reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +53,9 @@ public class regrister_fragment extends Fragment {
         cncl_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                leave();
                 Navigation.findNavController(view).navigateUp();
+
             }
         });
 
@@ -62,6 +67,7 @@ public class regrister_fragment extends Fragment {
 
 
     public void save() {
+        leave();
         String name=name_et.getText().toString();
         String phone=phone_et.getText().toString();
         String pass=pass_et.getText().toString();
@@ -79,16 +85,33 @@ public class regrister_fragment extends Fragment {
                         }
                     });
             alertDialog.show();
+            back();
         }
         else {
             User user = new User(name, pass, phone, mail,blind);
 
-            Model.instance.addUser(user, (boolean flag) -> {
-                Log.d("TAG", Boolean.toString(flag));
-                if (flag==true){
-                    Model.instance.regModel(mail, pass, () ->  Navigation.findNavController(view).navigate(R.id.action_regrister_fragment_to_mapSelectFragment));
+            Model.instance.addUser(user, (boolean sucsess) -> {
+                Log.d("TAG", Boolean.toString(sucsess));
+                if (sucsess){
+                    Model.instance.regModel(mail, pass, (boolean success) ->  {
+                        if(success) {
+                            Navigation.findNavController(view).navigate(R.id.action_regrister_fragment_to_mapSelectFragment);
+                        }else{
+                            AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
+                            alertDialog.setTitle("ERROR");
+                            alertDialog.setMessage("Something went wrong ");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+                            back();
+                        }
+                    });
                 }
-                if(flag==false){
+                else{
                     AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
                     alertDialog.setTitle("ERROR");
                     alertDialog.setMessage("User name already exist");
@@ -99,11 +122,32 @@ public class regrister_fragment extends Fragment {
                                 }
                             });
                     alertDialog.show();
-
+                    back();
                 }
             });
         }
     }
 
+    private void leave(){
+        reg_btn.setClickable(false);
+        cncl_btn.setClickable(false);
+        name_et.setClickable(false);
+        pass_et.setClickable(false);
+        phone_et.setClickable(false);
+        mail_et.setClickable(false);
+        blind_cb.setClickable(false);
+        progBar.setVisibility(View.VISIBLE);
+    }
+
+    private void back(){
+        reg_btn.setClickable(true);
+        cncl_btn.setClickable(true);
+        name_et.setClickable(true);
+        pass_et.setClickable(true);
+        phone_et.setClickable(true);
+        mail_et.setClickable(true);
+        blind_cb.setClickable(true);
+        progBar.setVisibility(View.INVISIBLE);
+    }
 
 }
