@@ -19,10 +19,12 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +55,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback{
+public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static UserLocationAPI userLocationAPI;
     private View view;
     private final int ICON_SIZE = 60;
@@ -77,6 +79,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
     private List<Marker> gMarkers;
     private List<Marker> cafMarkers;
     private SupportMapFragment mapFragment;
+    private ProgressBar progBar;
     private int currentFloor;
 
 
@@ -89,11 +92,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         micBtn = view.findViewById(R.id.maps_mic_btn);
         stopNavBtn = view.findViewById(R.id.maps_stop_nav_btn);
         center_on_user = view.findViewById(R.id.maps_center_on_user_img);
+        progBar = view.findViewById(R.id.maps_progBar);
+        progBar.setVisibility(View.INVISIBLE);
         textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
                 // if No error is found then only it will run
-                if(i!=TextToSpeech.ERROR){
+                if (i != TextToSpeech.ERROR) {
                     // To Choose language of speech
                     textToSpeech.setLanguage(Locale.UK);
                 }
@@ -107,7 +112,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
                 Log.d("TAG", "onClick: CENTER ON IMAGE CLICKED");
                 LatLng temp = null;
                 temp = userLocationAPI.getCurrentUserLocation();
-                if(temp == null){
+                if (temp == null) {
                     temp = myMap.getLatLng();
                 }
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
@@ -119,7 +124,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         stopNavBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity2)(getActivity())).stopNavigation();
+                ((MainActivity2) (getActivity())).stopNavigation();
             }
         });
 
@@ -136,22 +141,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             }
         });
 
-
-
+        setHasOptionsMenu(true);
         return view;
     }
 
-    public static void showStopBtn(){
+    public static void showStopBtn() {
         stopNavBtn.setClickable(true);
         stopNavBtn.setVisibility(View.VISIBLE);
     }
 
-    public static void hideStopBtn(){
+    public static void hideStopBtn() {
         stopNavBtn.setVisibility(View.INVISIBLE);
         stopNavBtn.setClickable(false);
     }
 
-    private void blindSetup(){
+    private void blindSetup() {
         instructionTV = view.findViewById(R.id.instruction_map_fragment);
         center_on_user.setVisibility(View.INVISIBLE);
         center_on_user.setClickable(false);
@@ -160,8 +164,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         mapView.setClickable(false);
         micBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 Intent intent
                         = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -172,8 +175,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
 
                 try {
                     startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Toast.makeText(getContext(), " " + e.getMessage(),
                                     Toast.LENGTH_SHORT)
                             .show();
@@ -183,17 +185,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void preSetup() {
-        if(name == null){
-            name ="Sami Shamoon College of engineering";
+        if (name == null) {
+            name = "Sami Shamoon College of engineering";
         }
         Model.instance.getMapByName(name, new Model.GetMapByNameListener() {
             @Override
             public void onComplete(MyWayMap map) {
                 myMap = map;
-                if(myUser.isBlind()){
+                if (myUser.isBlind()) {
                     //User Is Blind
                     blindSetup();
-                }else {
+                } else {
                     //User can see
                     micBtn.setClickable(false);
                     micBtn.setVisibility(View.INVISIBLE);
@@ -204,7 +206,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setup() {
-        if(mapFragment==null){
+        if (mapFragment == null) {
             mapFragment =
                     (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
@@ -219,22 +221,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(GoogleMap googleMap1) {
-        googleMap=googleMap1;
-        if(myUser.isBlind()){
+        googleMap = googleMap1;
+        if (myUser.isBlind()) {
             mapView.setVisibility(View.INVISIBLE);
         }
-        List<Polygon> polygonList=new LinkedList<>();
+        List<Polygon> polygonList = new LinkedList<>();
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         //googleMap.addMarker(new MarkerOptions().position(myMap.getLatLng()).title(myMap.getName()));
         googleMap.moveCamera(CameraUpdateFactory.zoomTo(CAMERA_ZOOM));
-        bleInterface=((MainActivity2) getActivity()).getBluthoothInterface();
-        userLocationAPI = new UserLocationAPI(googleMap,bleInterface,getResources());
+        bleInterface = ((MainActivity2) getActivity()).getBluthoothInterface();
+        userLocationAPI = new UserLocationAPI(googleMap, bleInterface, getResources());
         ((MainActivity2) getActivity()).setupAPI(userLocationAPI);
         Model.instance.getAllRooms(new Model.GetAllRoomsListener() {
             @Override
             public void onComplete(List<Room> roomList) {
-                for(Room r:roomList){
-                    if(r.getFloor()==currentFloor) {
+                for (Room r : roomList) {
+                    if (r.getFloor() == currentFloor) {
                         Polygon p = googleMap.addPolygon(r.retPolygonOptions());
                         p.setClickable(true);
                         p.setTag(r.getDetails());
@@ -247,16 +249,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         //drawPath();
     }
 
-    private void drawExtraMarkers(boolean first){
+    private void drawExtraMarkers(boolean first) {
         Log.d("TAG", "drawExtraMarkers");
-        bMarkers=new LinkedList<>();
-        gMarkers=new LinkedList<>();
-        cafMarkers=new LinkedList<>();
-        stairsMarkers=new LinkedList<>();
-        synMarkers=new LinkedList<>();
+        bMarkers = new LinkedList<>();
+        gMarkers = new LinkedList<>();
+        cafMarkers = new LinkedList<>();
+        stairsMarkers = new LinkedList<>();
+        synMarkers = new LinkedList<>();
         Drawable circleDrawable;
         BitmapDescriptor markerIcon;
-        if(MyApplication.mapKeySettings[2]) {
+        if (MyApplication.mapKeySettings[2]) {
             circleDrawable = getResources().getDrawable(R.drawable.stairs);
             markerIcon = getMarkerIconFromDrawable(circleDrawable);
             Marker stairsMarker = googleMap.addMarker(new MarkerOptions()
@@ -267,7 +269,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             );
             stairsMarkers.add(stairsMarker);
         }
-        if(MyApplication.mapKeySettings[1]) {
+        if (MyApplication.mapKeySettings[1]) {
             circleDrawable = getResources().getDrawable(R.drawable.magen_david_icon);
             markerIcon = getMarkerIconFromDrawable(circleDrawable);
             Marker synagogueMarker = googleMap.addMarker(new MarkerOptions()
@@ -278,7 +280,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             );
             synMarkers.add(synagogueMarker);
         }
-        if(MyApplication.mapKeySettings[4]) {
+        if (MyApplication.mapKeySettings[4]) {
             circleDrawable = getResources().getDrawable(R.drawable.cafeteria_icon);
             markerIcon = getMarkerIconFromDrawable(circleDrawable);
             Marker cafeteria = googleMap.addMarker(new MarkerOptions()
@@ -289,7 +291,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             );
             cafMarkers.add(cafeteria);
         }
-        if(MyApplication.mapKeySettings[3]) {
+        if (MyApplication.mapKeySettings[3]) {
             circleDrawable = getResources().getDrawable(R.drawable.garbage_icon);
             markerIcon = getMarkerIconFromDrawable(circleDrawable);
             Marker garbage = googleMap.addMarker(new MarkerOptions()
@@ -300,7 +302,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             );
             gMarkers.add(garbage);
         }
-        if(MyApplication.mapKeySettings[0]) {
+        if (MyApplication.mapKeySettings[0]) {
             circleDrawable = getResources().getDrawable(R.drawable.bench_icon);
             markerIcon = getMarkerIconFromDrawable(circleDrawable);
             Marker bench1 = googleMap.addMarker(new MarkerOptions()
@@ -365,8 +367,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             );
             bMarkers.add(bench2);
         }
-        MyApplication.setMapKeySettings(5,false);
-        if(first) {
+        MyApplication.setMapKeySettings(5, false);
+        if (first) {
             onRoomsReady();
         }
     }
@@ -381,8 +383,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
                 Model.instance.GetRoomDetails(polygon, new Model.GetRoomDetailsListener() {
                     @Override
                     public void onComplete(Room room) {
-                        DialogFragment newFragment = new DialogRoomDetails(room,myUser);
-                        newFragment.show(getActivity().getSupportFragmentManager(),"TAG");
+                        DialogFragment newFragment = new DialogRoomDetails(room, myUser);
+                        newFragment.show(getActivity().getSupportFragmentManager(), "TAG");
 
                     }
                 });
@@ -404,15 +406,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void drawPolylineBetween2Rooms(RoomGraph.RoomRepresent roomA, RoomGraph.RoomRepresent roomB) {
-        PolylineOptions rectOptions=new PolylineOptions()
+        PolylineOptions rectOptions = new PolylineOptions()
                 .clickable(true)
                 .add(
-                        new LatLng( roomA.getDoorY(),roomA.getDoorX()),
-                        new LatLng( roomB.getDoorY(),roomB.getDoorX()))
+                        new LatLng(roomA.getDoorY(), roomA.getDoorX()),
+                        new LatLng(roomB.getDoorY(), roomB.getDoorX()))
                 .width(20)
                 .color(Color.BLACK);
         Polyline polyline = googleMap.addPolyline(rectOptions);
-        Log.d("drawPath","draw polyline between "+roomA.getRoom()+" and "+roomB.getRoom());
+        Log.d("drawPath", "draw polyline between " + roomA.getRoom() + " and " + roomB.getRoom());
 
     }
 
@@ -427,7 +429,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                    @Nullable Intent data) {
+                                 @Nullable Intent data) {
         Log.d("TAGO", "onActivityResult: ++++++++++++++++++");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MapsFragment.REQUEST_CODE_SPEECH_INPUT) {
@@ -440,14 +442,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    public static UserLocationAPI getUserLocationAPI(){
+    public static UserLocationAPI getUserLocationAPI() {
         return userLocationAPI;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(mapFragment!=null) {
+        if (mapFragment != null) {
 
         }
 
@@ -513,4 +515,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
 //        }
 //
 //    }
+
+    private void leave() {
+        center_on_user.setClickable(false);
+        stopNavBtn.setClickable(false);
+        mapView.setClickable(false);
+        progBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        leave();
+        Log.d("+++++TAG", "onOptionsItemSelected: ");
+        return super.onOptionsItemSelected(item);
+    }
 }

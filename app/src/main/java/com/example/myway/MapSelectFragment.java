@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.example.myway.Model.Model;
@@ -28,6 +29,7 @@ public class MapSelectFragment extends Fragment implements AdapterView.OnItemSel
     private Spinner selectSpinner;
     private List<MyWayMap> myMaps;
     private MyWayMap choosenMap;
+    private ProgressBar progBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,6 +37,8 @@ public class MapSelectFragment extends Fragment implements AdapterView.OnItemSel
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_map_select, container, false);
         selectBtn = view.findViewById(R.id.map_select_btn);
+        progBar = view.findViewById(R.id.map_select_progBar);
+        progBar.setVisibility(View.INVISIBLE);
         selectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,5 +96,11 @@ public class MapSelectFragment extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         Log.d("TAG", "onNothingSelected: ");
+    }
+
+    private void leave(){
+        selectBtn.setClickable(false);
+        selectSpinner.setClickable(false);
+        progBar.setVisibility(View.VISIBLE);
     }
 }
