@@ -45,7 +45,7 @@ public class UserLocationAPI {
     public static UserLocationAPI instance = null;
 
 
-    private final LatLng SAMISHAMOON = new LatLng(31.80693, 34.65828);
+    private final LatLng SAMISHAMOON = new LatLng(31.80714, 34.65814);
     private final int ICON_SIZE = 120;
 
 
@@ -102,6 +102,10 @@ public class UserLocationAPI {
     }
 
     private void updateUserIconLocation(){
+        if(userMarker.getPosition().longitude==userLocation.longitude && userMarker.getPosition().latitude==userLocation.latitude){
+            return;
+        }
+        Log.d("TAG", "updateUserIconLocation: Marker location updated");
         userMarker.setPosition(userLocation);
     }
 
@@ -263,9 +267,9 @@ public class UserLocationAPI {
 
     public String getCurrentRoom(){
         if (currentRoom==null){
-            return "167";
+            return "163";
         }
-        return currentRoom;
+        else return currentRoom;
     }
 
 }

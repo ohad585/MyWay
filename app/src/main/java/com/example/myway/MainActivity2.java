@@ -55,6 +55,7 @@ public class MainActivity2 extends AppCompatActivity {
     Button stopNavBtn;
     public String lastRoom;
     private Handler handler ;
+    private boolean navigation = false;
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST = 1;
@@ -233,7 +234,7 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     public void startNavigation(String navTo){
-
+        navigation = true;
         MapsFragment.showStopBtn();
         lastRoom = userLocationAPI.getCurrentRoom();
         RoomGraph.RoomRepresent currentLocation=g.getRoomByName(userLocationAPI.getCurrentRoom()); //change to current location of user
@@ -264,11 +265,25 @@ public class MainActivity2 extends AppCompatActivity {
             drawPath();
             readInstructions();
         }else readInstructions();
+        if(NavAlg.instance.arrayListOfInstruction().size()==1){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    instructionTV.setText("Arrived to destination");
+                    TextToSpeech textToSpeech = MapsFragment.textToSpeech;
+                    textToSpeech.speak("Arrived to destination",TextToSpeech.QUEUE_FLUSH,null);
+                    stopNavigation();
+                }
+            }, 2000);
+        }
     }
     public void checkForChange(String navTo){
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(!navigation){
+                    return;
+                }
                 if(lastRoom!=userLocationAPI.getCurrentRoom()){
                     stopNavigation();
                     startNavigation(navTo);
@@ -279,6 +294,7 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     public void stopNavigation(){
+        navigation = false;
         MapsFragment.hideStopBtn();
         if (currentUser.isBlind()){
             TextToSpeech textToSpeech = MapsFragment.textToSpeech;
